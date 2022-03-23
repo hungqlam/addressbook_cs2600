@@ -1,12 +1,13 @@
 #include <stdio.h>
-//#include <stdio_ext.h>
+#include <stdio_ext.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 
-#include "address_book_fops.h"
-//#include "abk_log.h"
-#include "address_book_menu.h"
+#include "abk_fileops.h"
+#include "abk_log.h"
+#include "abk_menus.h"
+#include "abk.h"
 #include "address_book.h"
 
 int get_option(int type, const char *msg)
@@ -60,10 +61,10 @@ void menu_header(const char *str)
 {
 	fflush(stdout);
 
-	system("cls"); //changed clear to cls
+	system("clear");
 
 	printf("#######  Address Book  #######\n");
-	if (!strcmp(str, "\0"))	// if(str != '\0')
+	if (str != '\0')
 	{
 		printf("#######  %s\n", str);
 	}
@@ -94,9 +95,8 @@ Status menu(AddressBook *address_book)
 	{
 		main_menu();
 
-		//option = get_option(NUM, "");
-		scanf("%i", &option);
-		
+		option = get_option(NUM, "");
+
 		if ((address_book-> count == 0) && (option != e_add_contact))
 		{
 			get_option(NONE, "No entries found!!. Would you like to add? Use Add Contacts");
@@ -135,6 +135,50 @@ Status menu(AddressBook *address_book)
 Status add_contacts(AddressBook *address_book)
 {
 	/* Add the functionality for adding contacts here */
+	char *nam;
+	char *phon;
+	char *ema; 
+	int opt;
+	do
+	{
+		/* code */
+		printf("#######   Add Contact:");
+		printf("\n\n");
+		printf("0. Back");
+		printf("\n1. Name");
+		printf("\n2. Phone No 1: ");
+		printf("\n3. Email ID 1: ");
+		printf("\n\nPlease select an option: ");
+
+		scanf("%d",&opt);
+		switch (opt)
+		{
+		
+			case e_second_opt:
+				printf("Enter the name:");
+				scanf("%c",&nam);
+				address_book->list->name= nam;
+				break;
+			case e_third_opt:
+				printf("Enter the phone number 1:");
+				scanf("%c",&phon);
+				address_book->list->phone_numbers = phon;
+				break;
+			case e_fourth_opt:
+				printf("Enter email:");
+				scanf("%c",&ema);
+				address_book->list->email_addresses = ema;
+				break;
+		
+			case e_first_opt:
+			// case 0
+				break;
+		}
+	} while (opt!=0);
+	
+	
+
+	
 }
 
 Status search(const char *str, AddressBook *address_book, int loop_count, int field, const char *msg, Modes mode)
