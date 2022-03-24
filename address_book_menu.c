@@ -14,9 +14,29 @@ int get_option(int type, const char *msg)
 	/*
 	 * Mutilfuction user intractions like
 	 * Just an enter key detection
-	 * Read an number
+	 * Read an number OR
 	 * Read a charcter
 	 */ 
+	if (type == CHAR){
+		char option;
+		printf("%s", msg); 		//First print the message passed to us
+		scanf("%c", &option);	//Then capture a character
+		return option;
+	}
+
+	if (type == NUM){
+		int option;
+		printf("%s", msg);
+		scanf("%i", &option);
+		return option;
+	}
+
+	if (type == NONE){ 			//Not sure how to interpret a NONE option
+		printf("%s", msg);
+		return -1;
+	}
+
+	return -1;
 
 	/* Fill the code to add above functionality */
 }
@@ -32,7 +52,7 @@ Status save_prompt(AddressBook *address_book)
 		option = get_option(CHAR, "\rEnter 'N' to Ignore and 'Y' to Save: ");
 
 		if (option == 'Y')
-		{
+		{	
 			save_file(address_book);
 			printf("Exiting. Data saved in %s\n", DEFAULT_FILE);
 
@@ -94,9 +114,8 @@ Status menu(AddressBook *address_book)
 	{
 		main_menu();
 
-		//option = get_option(NUM, "");
-		scanf("%i", &option);
-		
+		option = get_option(NUM, "");
+
 		if ((address_book-> count == 0) && (option != e_add_contact))
 		{
 			get_option(NONE, "No entries found!!. Would you like to add? Use Add Contacts");
@@ -140,11 +159,41 @@ Status add_contacts(AddressBook *address_book)
 Status search(const char *str, AddressBook *address_book, int loop_count, int field, const char *msg, Modes mode)
 {
 	/* Add the functionality for adding contacts here */
+	//This will be the generic search type. We take in a string, ptr to address_book, how far to search,
+			//what we are searching for (as in name, email, phone), a message to modify, and mode
+
+	//First we should determine what we are searching for, name, phone number, or email address
+	
+	//Second we should call the appropriate search function
+
+	//Finally we should iterate through the search function 
+	for (int i=0; i<loop_count; i++){
+	
+	}
+
 }
 
 Status search_contact(AddressBook *address_book)
 {
 	/* Add the functionality for search contacts here */
+	//This is the menu function, and will call search above
+	//Name
+	//Number
+	//email
+	int option = -1;
+	do {
+		printf("####### Address Book #######\n");
+		printf("####### Search Contact by:\n");
+		printf("0. Back\n");
+		printf("1. Name\n");
+		printf("2. Phone number\n");
+		printf("3. Email ID\n");
+		printf("4. Serial number\n");
+		scanf("%i", &option);
+		}
+		while (option == -1);
+
+	search("909", address_book, address_book->count, 0, "", e_search);
 }
 
 Status edit_contact(AddressBook *address_book)
