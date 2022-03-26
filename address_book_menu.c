@@ -171,7 +171,7 @@ Status search(const char *str, AddressBook *address_book, int loop_count, int fi
 	//Smart search
 	
 	//Dumb search
-	int strdifference;
+	int strdifference = -1;
 	char search[32];
 	char *searchPtr = (char *)address_book->list; // Start ptr at beginning of list
 	int nameSize = sizeof(address_book->list->name);
@@ -226,13 +226,14 @@ Status search(const char *str, AddressBook *address_book, int loop_count, int fi
 			case 4:{ //By serial number
 				//Jump to beginning of serial number
 				searchPtr += nameSize + phoneArraySize + emailArraySize;
-
-				strdifference = *searchPtr == strtol(str, NULL, 10); //This is really hacky (sorry)
+				int si_no = strtol(str, NULL, 10);
+				if (si_no - *searchPtr == 0) strdifference = 0;
+				//strdifference = *searchPtr == strtol(str, NULL, 10); //This is really hacky (sorry)
 				if (strdifference == 0) {
 					printf("Serial Number Found!\n");
 					break;
 				}
-				searchPtr += sizeof(ContactInfo);
+				searchPtr += sizeof(address_book->list->si_no);
 				break;
 			}
 		}
@@ -259,6 +260,12 @@ Status search(const char *str, AddressBook *address_book, int loop_count, int fi
 				searchPtr, 
 				searchPtr + nameSize,
 				searchPtr + nameSize + phoneArraySize);
+			for (int j=1; j < PHONE_NUMBER_COUNT; j++){
+				printf(":      :                               : %s                             : %s                           :\n",
+				searchPtr + nameSize + (j*sizeof(address_book->list->phone_numbers[0])),
+				searchPtr + nameSize + phoneArraySize + (j*sizeof(address_book->list->email_addresses[0])));
+
+			}
 			printf("==========================================================================\n");
 			return e_success;
 		}

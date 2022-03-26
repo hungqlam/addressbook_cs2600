@@ -31,9 +31,31 @@ int main(void)
 	strcpy(cptr, name2);
 	cptr += sizeof(clist[0].name);
 	strcpy(cptr, phone2);
-	cptr += sizeof(clist[0].phone_numbers);
+	//Insert a lot of numbers
+	cptr += sizeof(clist[0].phone_numbers[0]);
+	strcpy(cptr, "888-123-1234");
+	cptr += sizeof(clist[0].phone_numbers[0]);
+	strcpy(cptr, "888-123-2234");
+	cptr += sizeof(clist[0].phone_numbers[0]);
+	strcpy(cptr, "888-123-3234");
+	cptr += sizeof(clist[0].phone_numbers[0]);
+	strcpy(cptr, "888-123-4234");
+	cptr += sizeof(clist[0].phone_numbers[0]);
+
+	//cptr += sizeof(clist[0].phone_numbers);
 	strcpy(cptr, email2);
-	cptr += sizeof(clist[0].email_addresses);
+
+	cptr += sizeof(clist[0].email_addresses[0]);
+	strcpy(cptr, "jtimothy2@adi.uk");
+	cptr += sizeof(clist[0].email_addresses[0]);
+	strcpy(cptr, "jtimothy3@adi.uk");
+	cptr += sizeof(clist[0].email_addresses[0]);
+	strcpy(cptr, "jtimothy4@adi.uk");
+	cptr += sizeof(clist[0].email_addresses[0]);
+	strcpy(cptr, "jtimothy5@adi.uk");
+	cptr += sizeof(clist[0].email_addresses[0]);
+
+	//cptr += sizeof(clist[0].email_addresses);
 	*cptr = 71;
 	address_book.count = 2;
 	address_book.list = clist;
