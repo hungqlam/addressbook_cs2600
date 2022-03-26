@@ -174,71 +174,96 @@ Status search(const char *str, AddressBook *address_book, int loop_count, int fi
 	int strdifference;
 	char search[32];
 	char *searchPtr = (char *)address_book->list; // Start ptr at beginning of list
-	
+	int nameSize = sizeof(address_book->list->name);
+	int phoneArraySize = sizeof(address_book->list->phone_numbers);
+	int emailArraySize = sizeof(address_book->list->email_addresses);
+
 	strcpy(search, str);
 	for (int i=0; i<=loop_count; i++){
+		
+
+		switch (field){
+			case 1:{ //By name
+				strdifference = strcmp(search, searchPtr); //We are already looking at first name in list
+				if (strdifference == 0) {
+					printf("NAME FOUND!\n");
+					break;
+				}
+				searchPtr += sizeof(ContactInfo); //Jump to next contact
+				break;
+			}
+			case 2:{ //By phone number
+				searchPtr += sizeof(address_book->list->name); //Goto 1st phone number in contact
+				for (int phoneNum=0; phoneNum < PHONE_NUMBER_COUNT; phoneNum++){ //This loop searches all of contact n's phone numbers
+					strdifference = strcmp(str, searchPtr); //Remember strcmp compares up to null character, so we wont go over entire array
+					if (strdifference == 0) {
+						printf("PHONE FOUND!\n");
+						break;
+					}
+					searchPtr += sizeof(address_book->list->phone_numbers[0]); //Jump to next phone number
+				}
+				//searchPtr is now at emailaddress 1, we should go back a few
+				searchPtr -= phoneArraySize + nameSize; //Go back to beginning of phone numbers
+				searchPtr += sizeof(ContactInfo); //Jump forward one contact
+				break;
+			}
+			case 3:{ //By email address
+				//Jump to beginning of email addresses
+				searchPtr += nameSize + phoneArraySize;
+
+				for (int emailAdd=0; emailAdd < EMAIL_ID_COUNT; emailAdd++){
+					strdifference = strcmp(str, searchPtr);
+					if (strdifference == 0) {
+						printf("EMAIL FOUND!\n");
+						break;
+					}
+					searchPtr += sizeof(address_book->list->email_addresses[0]);
+				}
+				searchPtr -= emailArraySize + phoneArraySize + nameSize;
+				searchPtr += sizeof(ContactInfo);
+				break;
+			}
+			case 4:{ //By serial number
+				//Jump to beginning of serial number
+				searchPtr += nameSize + phoneArraySize + emailArraySize;
+
+				strdifference = *searchPtr == strtol(str, NULL, 10); //This is really hacky (sorry)
+				if (strdifference == 0) {
+					printf("Serial Number Found!\n");
+					break;
+				}
+				searchPtr += sizeof(ContactInfo);
+				break;
+			}
+		}
+		//Search names
+		//searchPtr += sizeof(address_book->list->name); //Move ptr to beginning of phone_numbers
+		//Search phone numbers
+		//searchPtr += sizeof(address_book->list->phone_numbers[0]); // Move ahead one phone number
+		//Search email addresses
+		//Search serial number
+		//searchPtr += sizeof(address_book->list->si_no); //Jump to next thing
 		if (strdifference == 0){ //If we found a match
 			//print out contact
+			searchPtr = (char *)address_book->list; //Goto beginning of list
+			if (i >= 1){
+				searchPtr += i * (sizeof(ContactInfo));
+			}
 			printf("###### Address Book ######\n");
 			printf("###### Search Result:\n\n");
 			printf("==========================================================================\n");
 			printf(": S.No : Name                           : Phone Number                   : Email Address				:\n");
 			printf("==========================================================================\n");
 			printf(": %i    : %s                             : %s                             : %s                           :\n",
-				address_book->list[i-1].si_no, 
-				address_book->list[i-1].name[0], 
-				address_book->list[i-1].phone_numbers[0],
-				address_book->list[i-1].email_addresses[0]);
+				*(searchPtr + nameSize + phoneArraySize + emailArraySize), 
+				searchPtr, 
+				searchPtr + nameSize,
+				searchPtr + nameSize + phoneArraySize);
 			printf("==========================================================================\n");
 			return e_success;
 		}
-
-		switch (field){
-			case 1:{ //By name
-				
-			}
-			case 2:{ //By phone number
-
-			}
-			case 3:{ //By email address
-
-			}
-			case 4:{ //By serial number
-
-			}
-		}
-
-		//Search names
-		strdifference = strcmp(search, searchPtr); //We are already looking at first name in list
-				if (strdifference == 0) {
-					printf("NAME FOUND!\n");
-					break;
-				}
-		searchPtr += sizeof(address_book->list->name); //Move ptr to beginning of phone_numbers
-
-		//Search phone numbers
-		for (int phoneNum=0; phoneNum < PHONE_NUMBER_COUNT; phoneNum++){
-			strdifference = strcmp(str, searchPtr); //Remember strcmp compares up to null character, so we wont go over entire array
-			if (strdifference == 0) {
-				printf("PHONE FOUND!\n");
-				break;
-			}
-			searchPtr += sizeof(address_book->list->phone_numbers[0]); // Move ahead one phone number
-		}
-		//Search email addresses
-		for (int emailAdd=0; emailAdd < EMAIL_ID_COUNT; emailAdd++){
-			strdifference = strcmp(str, searchPtr);
-			if (strdifference == 0) {
-				printf("EMAIL FOUND!\n");
-				break;
-			}
-			searchPtr += sizeof(address_book->list->email_addresses[0]);
-		}
-		//Search serial number
-		strdifference = *searchPtr == strtol(str, NULL, 10); //This is really hacky (sorry)
-		if (strdifference == 0) printf("Serial Number Found!\n");
-		searchPtr += sizeof(address_book->list->si_no); //Jump to next thing
 	}
+	//Failed to find something, spit out error maybe here or for each case
 
 }
 

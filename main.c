@@ -23,7 +23,7 @@ int main(void)
 	//printf("Size of phone array: %i\n", sizeof(clist[0].phone_numbers));
 	strcpy(cptr, email);
 	cptr += sizeof(clist[0].email_addresses);
-	*cptr = 1;
+	*cptr = 65;
 	cptr += sizeof(clist[0].si_no);
 	char name2[32] = "Jack Timothy";
 	char phone2[32] = "909-112-1234";
@@ -34,7 +34,7 @@ int main(void)
 	cptr += sizeof(clist[0].phone_numbers);
 	strcpy(cptr, email2);
 	cptr += sizeof(clist[0].email_addresses);
-	*cptr = 2;
+	*cptr = 71;
 	address_book.count = 2;
 	address_book.list = clist;
 	Status ret;
