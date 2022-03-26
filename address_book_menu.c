@@ -80,7 +80,7 @@ void menu_header(const char *str)
 {
 	fflush(stdout);
 
-	system("cls"); //changed clear to cls
+	//system("cls"); //changed clear to cls
 
 	printf("#######  Address Book  #######\n");
 	if (!strcmp(str, "\0"))	// if(str != '\0')
@@ -118,6 +118,7 @@ Status menu(AddressBook *address_book)
 
 		if ((address_book-> count == 0) && (option != e_add_contact))
 		{
+			//This doesn't appear to be functioning with just search function implemented
 			get_option(NONE, "No entries found!!. Would you like to add? Use Add Contacts");
 
 			continue;
@@ -160,15 +161,83 @@ Status search(const char *str, AddressBook *address_book, int loop_count, int fi
 {
 	/* Add the functionality for adding contacts here */
 	//This will be the generic search type. We take in a string, ptr to address_book, how far to search,
-			//what we are searching for (as in name, email, phone), a message to modify, and mode
+			//what we are searching for (as in name, email, phone), a message to print to console, and mode
 
 	//First we should determine what we are searching for, name, phone number, or email address
 	
 	//Second we should call the appropriate search function
 
 	//Finally we should iterate through the search function 
-	for (int i=0; i<loop_count; i++){
+	//Smart search
 	
+	//Dumb search
+	int strdifference;
+	char search[32];
+	char *searchPtr = (char *)address_book->list; // Start ptr at beginning of list
+	
+	strcpy(search, str);
+	for (int i=0; i<=loop_count; i++){
+		if (strdifference == 0){ //If we found a match
+			//print out contact
+			printf("###### Address Book ######\n");
+			printf("###### Search Result:\n\n");
+			printf("==========================================================================\n");
+			printf(": S.No : Name                           : Phone Number                   : Email Address				:\n");
+			printf("==========================================================================\n");
+			printf(": %i    : %s                             : %s                             : %s                           :\n",
+				address_book->list[i-1].si_no, 
+				address_book->list[i-1].name[0], 
+				address_book->list[i-1].phone_numbers[0],
+				address_book->list[i-1].email_addresses[0]);
+			printf("==========================================================================\n");
+			return e_success;
+		}
+
+		switch (field){
+			case 1:{ //By name
+				
+			}
+			case 2:{ //By phone number
+
+			}
+			case 3:{ //By email address
+
+			}
+			case 4:{ //By serial number
+
+			}
+		}
+
+		//Search names
+		strdifference = strcmp(search, searchPtr); //We are already looking at first name in list
+				if (strdifference == 0) {
+					printf("NAME FOUND!\n");
+					break;
+				}
+		searchPtr += sizeof(address_book->list->name); //Move ptr to beginning of phone_numbers
+
+		//Search phone numbers
+		for (int phoneNum=0; phoneNum < PHONE_NUMBER_COUNT; phoneNum++){
+			strdifference = strcmp(str, searchPtr); //Remember strcmp compares up to null character, so we wont go over entire array
+			if (strdifference == 0) {
+				printf("PHONE FOUND!\n");
+				break;
+			}
+			searchPtr += sizeof(address_book->list->phone_numbers[0]); // Move ahead one phone number
+		}
+		//Search email addresses
+		for (int emailAdd=0; emailAdd < EMAIL_ID_COUNT; emailAdd++){
+			strdifference = strcmp(str, searchPtr);
+			if (strdifference == 0) {
+				printf("EMAIL FOUND!\n");
+				break;
+			}
+			searchPtr += sizeof(address_book->list->email_addresses[0]);
+		}
+		//Search serial number
+		strdifference = *searchPtr == strtol(str, NULL, 10); //This is really hacky (sorry)
+		if (strdifference == 0) printf("Serial Number Found!\n");
+		searchPtr += sizeof(address_book->list->si_no); //Jump to next thing
 	}
 
 }
@@ -181,6 +250,7 @@ Status search_contact(AddressBook *address_book)
 	//Number
 	//email
 	int option = -1;
+	char str[31];
 	do {
 		printf("####### Address Book #######\n");
 		printf("####### Search Contact by:\n");
@@ -188,12 +258,43 @@ Status search_contact(AddressBook *address_book)
 		printf("1. Name\n");
 		printf("2. Phone number\n");
 		printf("3. Email ID\n");
-		printf("4. Serial number\n");
-		scanf("%i", &option);
+		printf("4. Serial number\n\n");
+		option = get_option(NUM, "Please select an option: ");
 		}
 		while (option == -1);
-
-	search("909", address_book, address_book->count, 0, "", e_search);
+	
+	fflush(stdin);
+	switch (option){
+		case 0: return e_exit;
+		case 1:{
+			printf("Enter the name: ");
+			scanf("%[^\n]s", str);
+			//fgets(str, NAME_LEN, stdin);
+			Status ret = search(str, address_book, address_book->count, option, "", e_search);
+			return ret;
+		}
+		case 2:{
+			printf("Enter a phone number: ");
+			scanf("%[^\n]s", str);
+			Status ret = search(str, address_book, address_book->count, option, "", e_search);
+			return ret;
+		}
+		case 3:{
+			printf("Enter an email address: ");
+			scanf("%[^\n]s", str);
+			Status ret = search(str, address_book, address_book->count, option, "", e_search);
+			return ret;
+		}
+		case 4:{
+			printf("Enter a serial number: ");
+			scanf("%[^\n]s", str);
+			Status ret = search(str, address_book, address_book->count, option, "", e_search);
+			return ret;
+		}
+		default:{
+			return e_no_match;
+		}
+	}
 }
 
 Status edit_contact(AddressBook *address_book)

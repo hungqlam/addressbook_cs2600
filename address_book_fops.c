@@ -15,27 +15,51 @@ Status load_file(AddressBook *address_book)
 	/* 
 	 * Check for file existance
 	 */
-	address_book->fp = fopen(DEFAULT_FILE, "r");
-	if (address_book->fp == NULL){
+	//At this point, we are assuming the address_book is empty and thus fp is NULL
+	//So really we don't need to do this stuff with address_book->fp
+	/*FILE *fileptr = fopen(DEFAULT_FILE, "r");
+	if (fileptr == NULL){
+		fclose(fileptr); //Close file, maybe return a status
+	}*/
+
+	address_book->fp = fopen(DEFAULT_FILE, "r"); //This works because we dont need to make a new ptr
+	if (address_book->fp == NULL){ //Have we found the file?
 		//throw error
 		printf("FILE NOT FOUND");
-		//perror("\nFILE NOT FOUND");
+		ret = e_fail;
 		fclose(address_book->fp);
-		ret = -1;
-		//return e_fail;
 	}
-	fclose(address_book->fp);
 
 	//alternatively
-	if (!access(DEFAULT_FILE, F_OK))
-		printf("FILE NOT FOUND");//perror("\nFILE NOT FOUND");
+	/*if (!access(DEFAULT_FILE, F_OK))
+		printf("FILE NOT FOUND");//perror("\nFILE NOT FOUND");*/
 
-	if (ret == 0) // <--- What is ret?
+	if (ret == 0) // File has been detected, -10 would mean fail
 	{
 		/* 
 		 * Do the neccessary step to open the file
 		 * Do error handling
 		 */ 
+		int numberOfLines = 0;
+		char buffer[353];
+		//Because the file is still open we shall simply begin copying it into our list
+		//Determine how large the file is while checking for errors
+		while (fgets(buffer, 353, address_book->fp)){
+			numberOfLines++;
+		}
+		printf("%i lines read from file.\n", numberOfLines);
+		//Make an array to accomodate all lines
+		ContactInfo contactinfo[numberOfLines];
+		for (int line = 0; line < numberOfLines; line++){
+			//Put all names
+			//Put all phone numbers
+			//Put all email addresses
+			break; //DELETE ME
+		}
+
+		address_book->list = contactinfo;
+		fclose(address_book->fp);
+		
 	}
 	else
 	{
@@ -44,7 +68,7 @@ Status load_file(AddressBook *address_book)
 		address_book->fp = fopen(DEFAULT_FILE, "a");
 		fclose(address_book->fp);
 	}
-
+	fclose(address_book->fp);
 	return e_success;
 }
 
