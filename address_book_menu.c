@@ -147,7 +147,7 @@ Status search_contact(AddressBook *address_book)
 	/* Add the functionality for search contacts here */
 }
 
-Status edit_information(ContactInfor *person, MenuOptions option)
+Status edit_information(ContactInfo *person, MenuOptions option)
 {
 	int index;
 	int string_len;
@@ -226,7 +226,7 @@ Status edit_information(ContactInfor *person, MenuOptions option)
 		break;
 	
 	}
-	return e_success
+	return e_success;
 }
 Status edit_contact(AddressBook *address_book)
 {
@@ -264,7 +264,7 @@ Status edit_contact(AddressBook *address_book)
 			scanf("%c",&input);
 			if(input == 's')
 			{
-				printf("Select a Serial Number (S.No) to Edit: ")
+				printf("Select a Serial Number (S.No) to Edit: ");
 				//prompt the user to enter the serial no to edit
 				// print all the information of the person to edit
 
@@ -285,7 +285,7 @@ Status edit_contact(AddressBook *address_book)
 			scanf("%c",&input);
 			if(input == 's')
 			{
-				printf("Select a Serial Number (S.No) to Edit: ")
+				printf("Select a Serial Number (S.No) to Edit: ");
 				//prompt the user to enter the serial no to edit
 				// print all the information of the person to edit
 
@@ -305,7 +305,7 @@ Status edit_contact(AddressBook *address_book)
 			scanf("%c",&input);
 			if(input == 's')
 			{
-				printf("Select a Serial Number (S.No) to Edit: ")
+				printf("Select a Serial Number (S.No) to Edit: ");
 				//prompt the user to enter the serial no to edit
 				// print all the information of the person to edit
 
@@ -325,7 +325,7 @@ Status edit_contact(AddressBook *address_book)
 			scanf("%c",&input);
 			if(input == 's')
 			{
-				printf("Select a Serial Number (S.No) to Edit: ")
+				printf("Select a Serial Number (S.No) to Edit: ");
 				//prompt the user to enter the serial no to edit
 				// print all the information of the person to edit
 
@@ -339,12 +339,13 @@ Status edit_contact(AddressBook *address_book)
 			break;
 		}
 		
-	} while (option != 0);
+	} while (opt != 0);
 
 	return e_success;
 	
 
 }
+
 
 Status delete_contact(AddressBook *address_book)
 {
