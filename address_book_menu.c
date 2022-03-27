@@ -60,55 +60,93 @@ Status list_contacts(AddressBook *address_book, const char *title, int *index, c
 	int line_size = -30;
 	int si_size = -5;
 	char line[] = "================================================================================================================================";
-	do
+	// Default operation to list all the current contact
+	if (index == NULL && mode == e_list_contacts)
 	{
+		do
+		{
+			menu_header(title);
+			printf("%.*s\n", 107, line);
+			printf(": %*s : %*s : %*s : %*s:\n", si_size, "S. No", line_size, "Name", line_size, "Phone No", line_size, "Email Id");
+			printf("%.*s\n", 107, line);
+			fflush(stdout);
+
+			for (int i = count; i < MAX_PAGE + count; i++)
+			{
+				for (int j = 0; j < 5; j++)
+				{
+					if (j == 0)
+					{
+						printf(": %*d : %*s :", si_size, address_book->list[i].si_no, line_size, address_book->list[i].name[0]);
+					}
+					else
+					{
+						printf(": %*s : %*s :", si_size, "", line_size, "");
+					}
+					printf(" %*s : %*s:\n", line_size, address_book->list[i].phone_numbers[j], line_size, address_book->list[i].email_addresses[j]);
+				}
+				printf("%.*s\n", 107, line);
+			}
+
+			while (getchar() != '\n')
+				;
+			printf("%s", msg);
+			fflush(stdout);
+			print_option = getchar();
+
+			switch (print_option)
+			{
+			case 'n':
+				count += MAX_PAGE;
+				break;
+			case 'p':
+				if (count != 0)
+					count -= MAX_PAGE;
+				break;
+			case 'q':
+				break;
+			default:
+				printf("Please enter a valid option!\n");
+			}
+
+		} while (print_option != 'q');
+	}
+	else // when called by search() to print out all found indices (int* index)
+	{
+		printf("Clled by search\n");
+		int found = 0;
 		menu_header(title);
 		printf("%.*s\n", 107, line);
 		printf(": %*s : %*s : %*s : %*s:\n", si_size, "S. No", line_size, "Name", line_size, "Phone No", line_size, "Email Id");
 		printf("%.*s\n", 107, line);
 		fflush(stdout);
-
-		for (int i = count; i < MAX_PAGE + count; i++)
+		for (int i = 0; i < address_book->count; i++) // Loop through the entire AddressBook
 		{
-			for (int j = 0; j < 5; j++)
-			{
-				if (j == 0)
-				{
-					printf(": %*d : %*s :", si_size, address_book->list[i].si_no, line_size, address_book->list[i].name[0]);
-				}
-				else
-				{
-					printf(": %*s : %*s :", si_size, "", line_size, "");
-				}
-				printf(" %*s : %*s:\n", line_size, address_book->list[i].phone_numbers[j], line_size, address_book->list[i].email_addresses[j]);
-			}
-			printf("%.*s\n", 107, line);
-		}
 
+			if (i == index[found] && index[found] >= 0 && index[found] <= address_book->count) // Temporal condition
+			{
+
+				for (int j = 0; j < 5; j++)
+				{
+					if (j == 0)
+					{
+						printf(": %*d : %*s :", si_size, address_book->list[i].si_no, line_size, address_book->list[i].name[0]);
+					}
+					else
+					{
+						printf(": %*s : %*s :", si_size, "", line_size, "");
+					}
+					printf(" %*s : %*s:\n", line_size, address_book->list[i].phone_numbers[j], line_size, address_book->list[i].email_addresses[j]);
+				}
+				printf("%.*s\n", 107, line);
+				found++;
+			}
+		}
 		while (getchar() != '\n')
 			;
-		printf("%s", msg);
+		printf("%s\n", msg);
 		fflush(stdout);
-		print_option = getchar();
-
-		printf("Char ops: %c\n", print_option);
-
-		switch (print_option)
-		{
-		case 'n':
-			count += MAX_PAGE;
-			break;
-		case 'p':
-			if (count != 0)
-				count -= MAX_PAGE;
-			break;
-		case 'q':
-			break;
-		default:
-			printf("Please enter a valid option!\n");
-		}
-
-	} while (print_option != 'q');
+	}
 
 	return e_success;
 }
