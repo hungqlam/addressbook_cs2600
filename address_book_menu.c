@@ -266,6 +266,7 @@ Status search(const char *str, AddressBook *address_book, int loop_count, int fi
 				printf(":      :                               : %s                             : %s                           :\n",
 				searchPtr + nameSize + (j*sizeof(address_book->list->phone_numbers[0])),
 				searchPtr + nameSize + phoneArraySize + (j*sizeof(address_book->list->email_addresses[0])));
+				msg = searchPtr;
 
 			}
 			printf("==========================================================================\n");
