@@ -135,9 +135,7 @@ Status menu(AddressBook *address_book)
 Status add_contacts(AddressBook *address_book)
 {
 	/* Add the functionality for adding contacts here */
-	char *nam;
-	char *phon;
-	char *ema; 
+	
 	int opt;
 	do
 	{
@@ -151,23 +149,60 @@ Status add_contacts(AddressBook *address_book)
 		printf("\n\nPlease select an option: ");
 
 		scanf("%d",&opt);
+		AddressBook *book;
+		    book = malloc(sizeof(*book));
+
+		    if(book == NULL)
+		    {
+			printf("Cannot Allocate Memory\n");
+
+			return -1;
+		    }
+
+		    book->count = 1;
+		    book->list = malloc(sizeof(*(book->list)));
+		    book->list->si_no +=1;
+		    if(book->list == NULL)
+		    {
+			printf("Cannot Allocate Memory \n");
+			 /* on failure free successfuly allocated book */
+			 free(book);
+			 return  -1;
+		    }
+		
 		switch (opt)
 		{
 		
 			case e_second_opt:
 				printf("Enter the name:");
-				scanf("%s",&nam);
-				address_book->list->name= nam;
+				if(scanf("%s", &book->list->name[book->count])!=1)
+				    {
+					printf("Invalid, input\n");
+					free(book->list);
+					free(book);
+					return -1;
+				    }
 				break;
 			case e_third_opt:
-				printf("Enter the phone number 1:");
-				scanf("%s",&phon);
-				address_book->list->phone_numbers = phon;
+				printf("Enter the phone number :");
+				if(scanf("%s", &book->list->phone_numbers[book->count])!=1)
+				    {
+					printf("Invalid, input\n");
+					free(book->list);
+					free(book);
+					return -1;
+				    }
 				break;
 			case e_fourth_opt:
 				printf("Enter email:");
-				scanf("%s",&ema);
-				address_book->list->email_addresses = ema;
+				if(scanf("%s", &book->list->email_addresses[book->count])!=1)
+				    {
+					printf("Invalid, input\n");
+					free(book->list);
+					free(book);
+					return -1;
+				    }
+    
 				break;
 		
 			case e_first_opt:
