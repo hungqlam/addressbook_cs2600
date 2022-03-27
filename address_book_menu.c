@@ -157,6 +157,8 @@ Status add_contacts(AddressBook *address_book)
 	/* Add the functionality for adding contacts here */
 }
 
+/*(search term, pointer to book, number of contacts in list, searching name/phone/email/si_no, unused, unused)
+field: 1 = name, 2 = phone, 3 = email, 4 = serial number*/
 Status search(const char *str, AddressBook *address_book, int loop_count, int field, const char *msg, Modes mode)
 {
 	/* Add the functionality for adding contacts here */
