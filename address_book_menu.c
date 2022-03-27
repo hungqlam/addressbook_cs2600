@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <stdbool.h>
 
 #include "address_book_fops.h"
 //#include "abk_log.h"
@@ -156,12 +157,8 @@ Status delete_contact(AddressBook *address_book)
 {
 	/* Add the functionality for delete contacts here */
 	/* Add the functionality for delete contacts here */
-	char *msg = ":======:==================================:==================================:==================================:\n:"
-				": S.No : Name                             : Phone No                         : Email                            :\n:"
-				":======:==================================:==================================:==================================:\n"
-				":      :                                  :                                  :                                  :\n:"
-				":      :                                  :                                  :                                  :\n:"
-				":      :                                  :                                  :                                  :\n:";
+	char str[80];
+	char delete_char;
 
 	menu_header("Search Contact to Delete By:\n");
 
@@ -172,13 +169,105 @@ Status delete_contact(AddressBook *address_book)
 	printf("4. Serial No\n");
 
 	int option = -1;
-	option = get_option(NUM, "Please select an option: ");
-	// fflush(stdin);
+	// option = valid_int("Please select an option: ", 0, 4);
+	printf("Please select an option: ");
+
+	scanf("%d", &option);
+
 	printf("Delete Option = %d\n", option);
 
-	switch (option):
-		case 
+	switch (option)
+	{
+	case e_first_opt:
+		break;
+	case e_second_opt:
+		printf("Enter the name: ");
+		fflush(stdin);
+		scanf("%[^\n]s", str);
+		if (search(str, address_book, address_book->count, option, "", e_delete) != e_success)
+		{
+			printf("---FAIL---\n");
 
-	printf("--------------------------------- \n\n");
+			return e_fail;
+		}
+		break;
+	case e_third_opt:
+		printf("Enter the Phone No: ");
+		fflush(stdin);
+		scanf("%[^\n]s", str);
+		if (search(str, address_book, address_book->count, option, "", e_delete) != e_success)
+		{
+			printf("---FAIL---\n");
+
+			return e_fail;
+		}
+		break;
+	case e_fourth_opt:
+		printf("Enter the Email ID: ");
+		fflush(stdin);
+		scanf("%[^\n]s", str);
+		if (search(str, address_book, address_book->count, option, "", e_delete) != e_success)
+		{
+			printf("---FAIL---\n");
+
+			return e_fail;
+		}
+		break;
+	case e_fifth_opt:
+		printf("Enter the Serial No: ");
+		fflush(stdin);
+		scanf("%[^\n]s", str);
+		if (search(str, address_book, address_book->count, option, "", e_delete) != e_success)
+		{
+			printf("---FAIL---\n");
+
+			return e_fail;
+		}
+		break;
+	default:
+		printf("Default case\n");
+	}
+	fflush(stdin);
+	printf("\nPress: [s] = Select, [q] | Cancel: ");
+
+	scanf("%c", delete_char);
+	printf("%c\n", delete_char);
+
+	if (true)
+	{
+		int delete_line;
+		fflush(stdin);
+		printf("Select a Serial Number (S.No) to Delete: ");
+		scanf("%d", &delete_line);
+
+		FILE *fileptr1, *fileptr2;
+		char filename[40] = DEFAULT_FILE;
+		char ch;
+		int temp = 1;
+
+		fileptr1 = fopen(filename, "r");
+
+		fileptr2 = fopen("temp.csv", "w");
+		ch = 'A';
+		while (ch != EOF)
+		{
+			ch = getc(fileptr1);
+			
+			if (temp != delete_line)
+			{
+				
+				putc(ch, fileptr2);
+			}
+			if (ch == '\n')
+			{
+				temp++;
+			}
+		}
+		fclose(fileptr1);
+		fclose(fileptr2);
+		remove("address_book.csv");
+
+		rename("temp.csv", DEFAULT_FILE);
+	}
 
 }
