@@ -67,13 +67,12 @@ Status save_prompt(AddressBook *address_book)
 
 Status list_contacts(AddressBook *address_book, const char *title, int *index, const char *msg, Modes mode)
 {
-	/* 
+	/*
 	 * Add code to list all the contacts availabe in address_book.csv file
 	 * Should be menu based
 	 * The menu provide navigation option if the entries increase the page size
-	 */ 
-
-	return e_success;
+	 */
+	
 }
 
 void menu_header(const char *str)
@@ -160,36 +159,26 @@ Status add_contacts(AddressBook *address_book)
 /*(search term, pointer to book, number of contacts in list, searching name/phone/email/si_no, unused, unused)
 field: 1 = name, 2 = phone, 3 = email, 4 = serial number*/
 Status search(const char *str, AddressBook *address_book, int loop_count, int field, const char *msg, Modes mode)
-{
-	/* Add the functionality for adding contacts here */
-	//This will be the generic search type. We take in a string, ptr to address_book, how far to search,
-			//what we are searching for (as in name, email, phone), a message to print to console, and mode
-
-	//First we should determine what we are searching for, name, phone number, or email address
-	
-	//Second we should call the appropriate search function
-
-	//Finally we should iterate through the search function 
-	//Smart search
-	
+{	
 	//Dumb search
-	int strdifference = -1;
+	int match;
 	char search[32];
 	char *searchPtr = (char *)address_book->list; // Start ptr at beginning of list
 	int nameSize = sizeof(address_book->list->name);
 	int phoneArraySize = sizeof(address_book->list->phone_numbers);
 	int emailArraySize = sizeof(address_book->list->email_addresses);
+	int foundMatch[MAX_SEARCH_RESULTS] = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+	int numFound = 0;
 
 	strcpy(search, str);
-	for (int i=0; i<=loop_count; i++){
-		
-
+	for (int i=0; i<=loop_count-1; i++){
+		match = -1;
 		switch (field){
 			case 1:{ //By name
-				strdifference = strcmp(search, searchPtr); //We are already looking at first name in list
-				if (strdifference == 0) {
-					printf("NAME FOUND!\n");
-					break;
+				match = strcmp(search, searchPtr); //We are already looking at first name in list
+				if (match == 0) {
+					foundMatch[numFound] = i;
+					numFound++;
 				}
 				searchPtr += sizeof(ContactInfo); //Jump to next contact
 				break;
@@ -197,15 +186,15 @@ Status search(const char *str, AddressBook *address_book, int loop_count, int fi
 			case 2:{ //By phone number
 				searchPtr += sizeof(address_book->list->name); //Goto 1st phone number in contact
 				for (int phoneNum=0; phoneNum < PHONE_NUMBER_COUNT; phoneNum++){ //This loop searches all of contact n's phone numbers
-					strdifference = strcmp(str, searchPtr); //Remember strcmp compares up to null character, so we wont go over entire array
-					if (strdifference == 0) {
-						printf("PHONE FOUND!\n");
-						break;
+					match = strcmp(str, searchPtr); //Remember strcmp compares up to null character, so we wont go over entire array
+					if (match == 0) {
+						foundMatch[numFound] = i;
+						numFound++;
 					}
 					searchPtr += sizeof(address_book->list->phone_numbers[0]); //Jump to next phone number
 				}
 				//searchPtr is now at emailaddress 1, we should go back a few
-				searchPtr -= phoneArraySize + nameSize; //Go back to beginning of phone numbers
+				searchPtr -= phoneArraySize + nameSize; //Go back to beginning of contact
 				searchPtr += sizeof(ContactInfo); //Jump forward one contact
 				break;
 			}
@@ -214,10 +203,10 @@ Status search(const char *str, AddressBook *address_book, int loop_count, int fi
 				searchPtr += nameSize + phoneArraySize;
 
 				for (int emailAdd=0; emailAdd < EMAIL_ID_COUNT; emailAdd++){
-					strdifference = strcmp(str, searchPtr);
-					if (strdifference == 0) {
-						printf("EMAIL FOUND!\n");
-						break;
+					match = strcmp(str, searchPtr);
+					if (match == 0) {
+						foundMatch[numFound] = i;
+						numFound++;
 					}
 					searchPtr += sizeof(address_book->list->email_addresses[0]);
 				}
@@ -229,51 +218,27 @@ Status search(const char *str, AddressBook *address_book, int loop_count, int fi
 				//Jump to beginning of serial number
 				searchPtr += nameSize + phoneArraySize + emailArraySize;
 				int si_no = strtol(str, NULL, 10);
-				if (si_no - *searchPtr == 0) strdifference = 0;
-				//strdifference = *searchPtr == strtol(str, NULL, 10); //This is really hacky (sorry)
-				if (strdifference == 0) {
-					printf("Serial Number Found!\n");
-					break;
+				if (*searchPtr - si_no == 0) match = 0;
+				if (match == 0) {
+					foundMatch[numFound] = i;
+					numFound++;
 				}
 				searchPtr += sizeof(address_book->list->si_no);
 				break;
 			}
 		}
-		//Search names
-		//searchPtr += sizeof(address_book->list->name); //Move ptr to beginning of phone_numbers
-		//Search phone numbers
-		//searchPtr += sizeof(address_book->list->phone_numbers[0]); // Move ahead one phone number
-		//Search email addresses
-		//Search serial number
-		//searchPtr += sizeof(address_book->list->si_no); //Jump to next thing
-		if (strdifference == 0){ //If we found a match
-			//print out contact
-			searchPtr = (char *)address_book->list; //Goto beginning of list
-			if (i >= 1){
-				searchPtr += i * (sizeof(ContactInfo));
-			}
-			printf("###### Address Book ######\n");
-			printf("###### Search Result:\n\n");
-			printf("==========================================================================\n");
-			printf(": S.No : Name                           : Phone Number                   : Email Address				:\n");
-			printf("==========================================================================\n");
-			printf(": %i    : %s                             : %s                             : %s                           :\n",
-				*(searchPtr + nameSize + phoneArraySize + emailArraySize), 
-				searchPtr, 
-				searchPtr + nameSize,
-				searchPtr + nameSize + phoneArraySize);
-			for (int j=1; j < PHONE_NUMBER_COUNT; j++){
-				printf(":      :                               : %s                             : %s                           :\n",
-				searchPtr + nameSize + (j*sizeof(address_book->list->phone_numbers[0])),
-				searchPtr + nameSize + phoneArraySize + (j*sizeof(address_book->list->email_addresses[0])));
-				msg = searchPtr;
 
-			}
-			printf("==========================================================================\n");
-			return e_success;
-		}
+		
 	}
-	//Failed to find something, spit out error maybe here or for each case
+	if (foundMatch[0] != -1) {
+		list_contacts(address_book, "Search Result:\n", foundMatch, "", e_search);
+		return e_success;
+	}
+	else {
+		//Failed to find something, spit out error maybe here or for each case
+		printf("No result found for \"%s\"\n ",str);
+		return e_fail;
+	}
 
 }
 
@@ -286,6 +251,7 @@ Status search_contact(AddressBook *address_book)
 	//email
 	int option = -1;
 	char str[31];
+	Status ret;
 	do {
 		printf("####### Address Book #######\n");
 		printf("####### Search Contact by:\n");
@@ -295,41 +261,41 @@ Status search_contact(AddressBook *address_book)
 		printf("3. Email ID\n");
 		printf("4. Serial number\n\n");
 		option = get_option(NUM, "Please select an option: ");
-		}
-		while (option == -1);
-	
-	fflush(stdin);
-	switch (option){
-		case 0: return e_exit;
-		case 1:{
-			printf("Enter the name: ");
-			scanf("%[^\n]s", str);
-			//fgets(str, NAME_LEN, stdin);
-			Status ret = search(str, address_book, address_book->count, option, "", e_search);
-			return ret;
-		}
-		case 2:{
-			printf("Enter a phone number: ");
-			scanf("%[^\n]s", str);
-			Status ret = search(str, address_book, address_book->count, option, "", e_search);
-			return ret;
-		}
-		case 3:{
-			printf("Enter an email address: ");
-			scanf("%[^\n]s", str);
-			Status ret = search(str, address_book, address_book->count, option, "", e_search);
-			return ret;
-		}
-		case 4:{
-			printf("Enter a serial number: ");
-			scanf("%[^\n]s", str);
-			Status ret = search(str, address_book, address_book->count, option, "", e_search);
-			return ret;
-		}
-		default:{
-			return e_no_match;
+		fflush(stdin);
+		switch (option){
+			case 0: return e_exit;
+			case 1:{
+				printf("Enter the name: ");
+				scanf("%[^\n]s", str);
+				//fgets(str, NAME_LEN, stdin);
+				ret = search(str, address_book, address_book->count, option, "", e_search);
+				break;
+			}
+			case 2:{
+				printf("Enter a phone number: ");
+				scanf("%[^\n]s", str);
+				ret = search(str, address_book, address_book->count, option, "", e_search);
+				break;
+			}
+			case 3:{
+				printf("Enter an email address: ");
+				scanf("%[^\n]s", str);
+				ret = search(str, address_book, address_book->count, option, "", e_search);
+				break;
+			}
+			case 4:{
+				printf("Enter a serial number: ");
+				scanf("%[^\n]s", str);
+				ret = search(str, address_book, address_book->count, option, "", e_search);
+				break;
+			}
+			default:{
+				option = -1;
+			}
 		}
 	}
+		while (option != 0);
+		return ret;
 }
 
 Status edit_contact(AddressBook *address_book)

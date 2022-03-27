@@ -19,8 +19,9 @@
 /* Maximum number of email addresses per contact */
 #define EMAIL_ID_COUNT				5
 
-#define FIELD_DELIMITER				','
-#define NEXT_ENTRY					'\n'
+#define FIELD_DELIMITER ","
+#define NEXT_ENTRY "\n"
+#define MAX_SEARCH_RESULTS 			10
 
 
 typedef int bool_t;
