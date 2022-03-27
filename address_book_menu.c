@@ -170,6 +170,7 @@ Status edit_information(ContactInfo *person, MenuOptions option)
 			printf("Enter Name %d: [Just enter removes the entry]: ", index);
 
 			fgets(userInput, NAME_LEN, stdin);
+
 			string_len = strlen(userInput) - 1;
 			if (userInput[string_len] == '\n')
 				userInput[string_len] = '\0'; //set the end of userInput to null
@@ -177,6 +178,7 @@ Status edit_information(ContactInfo *person, MenuOptions option)
 			strcpy(person->name[index - 1], userInput);
 			free(userInput);
 			break;
+			
 	case e_second_opt:
 		userInput = malloc(sizeof(char) * NAME_LEN);
 
@@ -228,119 +230,137 @@ Status edit_information(ContactInfo *person, MenuOptions option)
 	}
 	return e_success;
 }
+ContactInfo *getSerialNo(AddressBook *address_book, int si_no)
+{
+	for (int person = 0; person < address_book->count; person++)
+	{
+		
+		if (((address_book->list) + person)->si_no == si_no)
+		{
+			return ((address_book->list) + person);
+		}
+	}
+	return NULL;
+}
 Status edit_contact(AddressBook *address_book)
 {
-	/* Add the functionality for edit contacts here */ 
-	//char userInput[50];
-	//char input;
+	int string_len;
+	char str[50];
 	MenuOptions opt;
-	char *nam;
-	char *phon;
-	char *ema; 
-	int se_no;
-	char input;
 	do
 	{
 		ContactInfo *person;
+		
 		printf("#######   Search contact to edit by: ");
 		printf("\n\n");
 		printf("0. Back");
 		printf("\n1. Name");
 		printf("\n2. Phone No  ");
 		printf("\n3. Email ID  ");
-		printf("\n4. Serial No ");
-		printf("\n\nPlease select an option: ");
+		printf("\n4. Serial No \n\n");
+		opt = get_option(NUM, "Please select an option: ");
 
-		opt = get_option(NUM, "");
-		
-		//Start searching to edit
-		switch (opt)
+		switch(opt)
 		{
-		case e_first_opt: //name option
-			printf("Enter the Name: ");
-			scanf("%c",&nam);
-			//search function
-			printf("Press: [s] = Select, Press: [q] | Cancel:");
-			scanf("%c",&input);
-			if(input == 's')
+			case 0: return e_exit;
+			case 1:
 			{
-				printf("Select a Serial Number (S.No) to Edit: ");
-				//prompt the user to enter the serial no to edit
-				// print all the information of the person to edit
-
-				opt = get_option(NUM, "");
-				edit_information(person, opt)	;	
-
+				printf("Enter the name: ");
+				scanf("%[^\n]s", str);
+				//fgets(str, NAME_LEN, stdin);
+				search(str, address_book, address_book->count, opt, "", e_search);
+				break;
 			}
-			
-			
-			break;
-
-		case e_second_opt: //phone number option
-			printf("Enter the Phone Number: ");
-			scanf("%c",&phon);
-
-			//search function
-			printf("Press: [s] = Select, Press: [q] | Cancel:");
-			scanf("%c",&input);
-			if(input == 's')
+			case 2:
 			{
-				printf("Select a Serial Number (S.No) to Edit: ");
-				//prompt the user to enter the serial no to edit
-				// print all the information of the person to edit
-
-				opt = get_option(NUM, "");
-				edit_information(person, opt)	;	
-
-			}		
-			
-			break;
-
-		case e_third_opt: //email ID option
-			printf("Enter the Email ID: ");
-			scanf("%c",&ema);
-
-			//search function
-			printf("Press: [s] = Select, Press: [q] | Cancel:");
-			scanf("%c",&input);
-			if(input == 's')
+				printf("Enter a phone number: ");
+				scanf("%[^\n]s", str);
+				search(str, address_book, address_book->count, opt, "", e_search);
+				break;
+			}
+			case 3:
 			{
-				printf("Select a Serial Number (S.No) to Edit: ");
-				//prompt the user to enter the serial no to edit
-				// print all the information of the person to edit
-
-				opt = get_option(NUM, "");
-				edit_information(person, opt)	;	
-
-			}		
-
-			break;
-
-		case e_fourth_opt: //serial number option
-			printf("Enter the Serial Number: ");
-			scanf("%d",&se_no);
-
-			//search function
-			printf("Press: [s] = Select, Press: [q] | Cancel:");
-			scanf("%c",&input);
-			if(input == 's')
+				printf("Enter an email address: ");
+				scanf("%[^\n]s", str);
+				search(str, address_book, address_book->count, opt, "", e_search);
+				break;
+			}
+			case 4:
 			{
-				printf("Select a Serial Number (S.No) to Edit: ");
-				//prompt the user to enter the serial no to edit
-				// print all the information of the person to edit
+				printf("Enter a serial number: ");
+				scanf("%[^\n]s", str);
+				search(str, address_book, address_book->count, opt, "", e_search);
+				break;
+			}
+			default:
+			{
+				return e_no_match;
+				break;
+			}
 
-				opt = get_option(NUM, "");
-				edit_information(person, opt)	;	
-
-			}		
-			break;
-
-		case e_no_opt: //back option
-			break;
 		}
-		
-	} while (opt != 0);
 
+		char option = get_option(CHAR, "Press: [s] = Select, Press: [q] | Cancel: ");
+		if(option == 's')
+		{
+			do
+			{
+			printf("Select a Serial Number (S.No) to Edit: ");
+			person = getSerialNo(address_book, get_option(NUM,""));
+			}while (person == NULL);
+
+			do
+			{
+				//Print out the information
+				printf("\n0. Back");
+				printf("\n1. Name       : %s", person->name[0]);
+				for (int name = 1; name < NAME_COUNT; name++)
+				{
+					if (strcmp(person->name[name], ""))
+					{
+						printf("\n%13d : %s", name + 1, person->name[name]);
+					}
+				}
+				printf("\n2. Phone No 1 : %s", person->phone_numbers[0]); 
+				for (int phone = 1; phone < PHONE_NUMBER_COUNT; phone++)
+				{
+					if (strcmp(person->phone_numbers[phone], ""))
+					{
+						printf("\n%13d : %s", phone + 1, person->phone_numbers[phone]);
+					}
+				}
+				printf("\n3. Email ID 1 : %s", person->email_addresses[0]);
+				for (int email = 1; email < EMAIL_ID_COUNT; email++)
+				{
+					if (strcmp(person->email_addresses[email], ""))
+					{
+						printf("\n%13d : %s", email + 1, person->email_addresses[email]);
+					}
+				}
+
+				opt = get_option(NUM,"Please select an option: ");
+				switch (opt)
+				{
+				case e_first_opt:
+				case e_second_opt:
+				case e_third_opt:
+					edit_information(person, opt);
+					break;
+				default:
+					break;
+				}
+
+
+			}while(opt != 0);
+
+		}
+
+		else
+		opt = 0;
+
+		
+	}while (opt != 0);
+	      
 	return e_success;
 	
 
