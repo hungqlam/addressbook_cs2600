@@ -155,4 +155,30 @@ Status edit_contact(AddressBook *address_book)
 Status delete_contact(AddressBook *address_book)
 {
 	/* Add the functionality for delete contacts here */
+	/* Add the functionality for delete contacts here */
+	char *msg = ":======:==================================:==================================:==================================:\n:"
+				": S.No : Name                             : Phone No                         : Email                            :\n:"
+				":======:==================================:==================================:==================================:\n"
+				":      :                                  :                                  :                                  :\n:"
+				":      :                                  :                                  :                                  :\n:"
+				":      :                                  :                                  :                                  :\n:";
+
+	menu_header("Search Contact to Delete By:\n");
+
+	printf("0. Back\n");
+	printf("1. Name\n");
+	printf("2. Phone No\n");
+	printf("3. Email ID\n");
+	printf("4. Serial No\n");
+
+	int option = -1;
+	option = get_option(NUM, "Please select an option: ");
+	// fflush(stdin);
+	printf("Delete Option = %d\n", option);
+
+	switch (option):
+		case 
+
+	printf("--------------------------------- \n\n");
+
 }
