@@ -11,6 +11,65 @@
 #include "address_book_menu.h"
 #include "address_book.h"
 
+
+int valid_int(const char *msg, int low, int high)
+{
+	int input;
+	while (1)
+	{
+		printf("%s", msg);
+		fflush(stdout);
+		scanf("%i", &input);
+		if (input >= low && input <= high)
+		{
+			break;
+		}
+		else
+		{
+			printf("Please enter valid a option between %d-%d !\n", low, high);
+		}
+
+		while (getchar() != '\n')
+			;
+
+		// clear input
+	}
+
+	return input;
+}
+
+void contact_confirmation(int target, char *msg, AddressBook *address_book)
+{
+	printf("Called confirmation\n");
+	int count = 0;
+	char condition[32] = "";
+
+	menu_header(msg);
+	printf("0. Exit\n");
+	printf("1. Name       : %s\n", address_book->list[target - 1].name[count]);
+	printf("2. Phone No %d : %s\n", count + 1, address_book->list[target - 1].phone_numbers[count]);
+
+	// for (int phone = 1; phone < PHONE_NUMBER_COUNT; phone++)
+	// {
+	// 	if (strcmp(address_book->list[target - 1].phone_numbers[phone], "") != 0) // Condition error
+	// 	{
+	// 		printf("            %d : %s\n", phone + 1, address_book->list[target - 1].phone_numbers[phone]);
+	// 	}
+	// }
+
+	printf("3. Email ID 1 : %s\n", address_book->list[target - 1].email_addresses[count]);
+
+	// for (int email = 1; email < EMAIL_ID_COUNT; email++)
+	// {
+	// 	if (address_book->list[target - 1].phone_numbers[email] != "")
+	// 	{
+	// 		printf("            %d : %s\n", email + 1, address_book->list[target - 1].phone_numbers[email]);
+	// 	}
+	// }
+
+	printf("\n");
+	fflush(stdout);
+}
 int get_option(int type, const char *msg)
 {
 	/*
@@ -214,7 +273,7 @@ Status menu(AddressBook *address_book)
 				delete_contact(address_book);
 				break;
 			case e_list_contacts:
-				list_contacts(address_book, "Search Result:\n", 0, "Press: [n] = Next Page, [p] = Previous Page, [q] | Cancel :", e_list_contacts);
+				list_contacts(address_book, "Search Result:\n", NULL, "Press: [n] = Next Page, [p] = Previous Page, [q] | Cancel : ", e_list_contacts);
 				break;
 				/* Add your implementation to call list_contacts function here */
 				
@@ -252,9 +311,9 @@ Status edit_contact(AddressBook *address_book)
 Status delete_contact(AddressBook *address_book)
 {
 	/* Add the functionality for delete contacts here */
-/* Add the functionality for delete contacts here */
 	char str[80];
-	char delete_char;
+	char delete_char, confirmation;
+	int target;
 
 	menu_header("Search Contact to Delete By:\n");
 
@@ -275,6 +334,7 @@ Status delete_contact(AddressBook *address_book)
 	switch (option)
 	{
 	case e_first_opt:
+		return e_back;
 		break;
 	case e_second_opt:
 		printf("Enter the name: ");
@@ -284,7 +344,7 @@ Status delete_contact(AddressBook *address_book)
 		{
 			printf("---FAIL---\n");
 
-			return e_fail;
+			return e_no_match;
 		}
 		break;
 	case e_third_opt:
@@ -295,7 +355,7 @@ Status delete_contact(AddressBook *address_book)
 		{
 			printf("---FAIL---\n");
 
-			return e_fail;
+			return e_no_match;
 		}
 		break;
 	case e_fourth_opt:
@@ -306,7 +366,7 @@ Status delete_contact(AddressBook *address_book)
 		{
 			printf("---FAIL---\n");
 
-			return e_fail;
+			return e_no_match;
 		}
 		break;
 	case e_fifth_opt:
@@ -316,68 +376,54 @@ Status delete_contact(AddressBook *address_book)
 		if (search(str, address_book, address_book->count, option, "", e_delete) != e_success)
 		{
 			printf("---FAIL---\n");
-
-			return e_fail;
+			return e_no_match;
 		}
 		break;
 	default:
 		printf("Default case\n");
 	}
-	fflush(stdin);
-	printf("\nPress: [s] = Select, [q] | Cancel: ");
 
-	scanf("%c", delete_char);
-	printf("%c\n", delete_char);
+	// selection = getChar("\nPress: [s] = Select, [q] | Cancel: ");
 
-	if (true)
+	if (true) //
 	{
-		int delete_line;
-		fflush(stdin);
-		printf("Select a Serial Number (S.No) to Delete: ");
-		scanf("%d", &delete_line);
+		printf("\nPress: [s] = Select, [q] | Cancel: ");
+		while (getchar() != '\n')
+			;
+		fflush(stdout);
+		delete_char = getchar();
 
-		FILE *fileptr1, *fileptr2;
-		char filename[40] = "address_book.csv";
-		char ch;
-		int temp = 1;
-
-		fileptr1 = fopen("address_book.csv", "r");
-
-		fileptr2 = fopen("temp.csv", "w");
-		ch = 'A';
-		while (ch != EOF)
+		if (delete_char == 's')
 		{
-			ch = getc(fileptr1);
 
-			if (temp != delete_line)
+			// ContactInfo temp;
+			// for (int i = 0; i < PHONE_NUMBER_COUNT; i++)
+			// { // Initialized
+			// 	if (i == 0)
+			// 	{
+			// 		strcpy(temp.name[0], "");
+			// 	}
+			// 	strcpy(temp.phone_numbers[i], "");
+			// 	strcpy(temp.email_addresses[i], "");
+			// }
+
+			printf("Select a serial Number (S.No) to Delete: ");
+			fflush(stdout);
+			scanf("%d", &target);
+			contact_confirmation(target, "Delete Contact:\n", address_book);
+
+			printf("Enter 'Y' to delete. [Press any key to ignore]: ");
+			while (getchar() != '\n')
+				;
+			fflush(stdout);
+			confirmation = getchar();
+
+			if (confirmation == 'Y')
 			{
-
-				putc(ch, fileptr2);
+				printf("Oh yeahhh\n");
 			}
-			if (ch == '\n')
-			{
-				temp++;
-			}
-		}
-		fclose(fileptr1);
-		fclose(fileptr2);
-
-		// remove("address_book.csv");
-
-		// rename("temp.csv", "address_book.csv");
-		int ret;
-
-		// ret = rename("temp.csv", DEFAULT_FILE);
-		ret = remove("address_book.csv");
-		if (ret == 0)
-		{
-			printf("File renamed successfully");
-		}
-		else
-		{
-			printf("Error: unable to rename the file");
-			fprintf(stderr, "System error (%d): %s\n", errno, strerror(errno));
 		}
 	}
+	return e_success;
 
 }
