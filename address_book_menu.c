@@ -150,7 +150,7 @@ Status add_contacts(AddressBook *address_book)
 
 		scanf("%d",&opt);
 		AddressBook *book;
-		    book = malloc(sizeof(*book));
+		book = (AddressBook*) malloc(sizeof(AddressBook));
 
 		    if(book == NULL)
 		    {
@@ -159,8 +159,8 @@ Status add_contacts(AddressBook *address_book)
 			return -1;
 		    }
 
-		    book->count = 1;
-		    book->list = malloc(sizeof(*(book->list)));
+		    book->count +=1;
+		    book->list = (ContactInfo*) malloc(sizeof(ContactInfo));
 		    book->list->si_no +=1;
 		    if(book->list == NULL)
 		    {
