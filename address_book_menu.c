@@ -314,6 +314,7 @@ Status delete_contact(AddressBook *address_book)
 	char str[80];
 	char delete_char, confirmation;
 	int target;
+	int count = 0;
 
 	menu_header("Search Contact to Delete By:\n");
 
@@ -326,10 +327,7 @@ Status delete_contact(AddressBook *address_book)
 	int option = -1;
 	// option = valid_int("Please select an option: ", 0, 4);
 	printf("Please select an option: ");
-
 	scanf("%d", &option);
-
-	printf("Delete Option = %d\n", option);
 
 	switch (option)
 	{
@@ -383,14 +381,9 @@ Status delete_contact(AddressBook *address_book)
 		printf("Default case\n");
 	}
 
-	// selection = getChar("\nPress: [s] = Select, [q] | Cancel: ");
-
 	if (true) //
 	{
 		printf("\nPress: [s] = Select, [q] | Cancel: ");
-		while (getchar() != '\n')
-			;
-		fflush(stdout);
 		delete_char = getchar();
 
 		if (delete_char == 's')
@@ -410,6 +403,7 @@ Status delete_contact(AddressBook *address_book)
 			printf("Select a serial Number (S.No) to Delete: ");
 			fflush(stdout);
 			scanf("%d", &target);
+			target = target - 1;
 			contact_confirmation(target, "Delete Contact:\n", address_book);
 
 			printf("Enter 'Y' to delete. [Press any key to ignore]: ");
@@ -420,10 +414,31 @@ Status delete_contact(AddressBook *address_book)
 
 			if (confirmation == 'Y')
 			{
-				printf("Oh yeahhh\n");
+				count = target;
+
+				while (count < address_book->count)
+				{
+					if (count == (address_book->count - 1))
+					{ // last contact
+						strcpy(address_book->list[count].name[0], "");
+						address_book->list[count].si_no = 0;
+					}
+					strcpy(address_book->list[count].name[0], address_book->list[count + 1].name[0]);
+					for (int i = 0; i < PHONE_NUMBER_COUNT; i++)
+					{
+						if (count == (address_book->count - 1))
+						{ // last contact
+							strcpy(address_book->list[count].phone_numbers[0], "");
+							strcpy(address_book->list[count].email_addresses[0], "");
+						}
+						strcpy(address_book->list[count].phone_numbers[0], address_book->list[count + 1].phone_numbers[0]);
+						strcpy(address_book->list[count].email_addresses[0], address_book->list[count + 1].email_addresses[0]);
+					}
+					count++;
+				}
+				address_book->count--;
 			}
 		}
 	}
 	return e_success;
-
 }
