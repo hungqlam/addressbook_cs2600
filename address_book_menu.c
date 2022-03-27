@@ -4,6 +4,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdbool.h>
+#include <errno.h>
 
 #include "address_book_fops.h"
 //#include "abk_log.h"
@@ -156,7 +157,7 @@ Status edit_contact(AddressBook *address_book)
 Status delete_contact(AddressBook *address_book)
 {
 	/* Add the functionality for delete contacts here */
-	/* Add the functionality for delete contacts here */
+/* Add the functionality for delete contacts here */
 	char str[80];
 	char delete_char;
 
@@ -241,21 +242,21 @@ Status delete_contact(AddressBook *address_book)
 		scanf("%d", &delete_line);
 
 		FILE *fileptr1, *fileptr2;
-		char filename[40] = DEFAULT_FILE;
+		char filename[40] = "address_book.csv";
 		char ch;
 		int temp = 1;
 
-		fileptr1 = fopen(filename, "r");
+		fileptr1 = fopen("address_book.csv", "r");
 
 		fileptr2 = fopen("temp.csv", "w");
 		ch = 'A';
 		while (ch != EOF)
 		{
 			ch = getc(fileptr1);
-			
+
 			if (temp != delete_line)
 			{
-				
+
 				putc(ch, fileptr2);
 			}
 			if (ch == '\n')
@@ -265,9 +266,23 @@ Status delete_contact(AddressBook *address_book)
 		}
 		fclose(fileptr1);
 		fclose(fileptr2);
-		remove("address_book.csv");
 
-		rename("temp.csv", DEFAULT_FILE);
+		// remove("address_book.csv");
+
+		// rename("temp.csv", "address_book.csv");
+		int ret;
+
+		// ret = rename("temp.csv", DEFAULT_FILE);
+		ret = remove("address_book.csv");
+		if (ret == 0)
+		{
+			printf("File renamed successfully");
+		}
+		else
+		{
+			printf("Error: unable to rename the file");
+			fprintf(stderr, "System error (%d): %s\n", errno, strerror(errno));
+		}
 	}
 
 }
