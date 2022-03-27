@@ -9,7 +9,9 @@
 
 int main(void)
 {
-	AddressBook address_book;
+	AddressBook *address_book; 
+	address_book = (AddressBook*) malloc(sizeof(AddressBook));
+	address_book->list = (ContactInfo*) malloc(sizeof(ContactInfo));
 	Status ret;
 
 	/* Load the file from .csv file if any */
