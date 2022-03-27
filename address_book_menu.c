@@ -49,11 +49,40 @@ Status save_prompt(AddressBook *address_book)
 
 Status list_contacts(AddressBook *address_book, const char *title, int *index, const char *msg, Modes mode)
 {
-	/* 
+	/*
 	 * Add code to list all the contacts availabe in address_book.csv file
 	 * Should be menu based
 	 * The menu provide navigation option if the entries increase the page size
-	 */ 
+	 */
+	int count = 0;
+	char option;
+	int line_size = -30;
+	int si_size = -5;
+	char line[] = "================================================================================================================================";
+	
+	menu_header(title);
+	printf("%.*s\n", 107, line);
+	printf(": %*s : %*s : %*s : %*s:\n", si_size, "S. No", line_size, "Name", line_size, "Phone No", line_size, "Email Id");
+	printf("%.*s\n", 107, line);
+	fflush(stdout);
+	for (int i = 0; i < 5; i++)
+	{
+
+		for (int j = 0; j < 5; j++)
+		{
+			if (j == 0)
+			{
+				printf(": %*d : %*s :", si_size, address_book->list[i].si_no, line_size, address_book->list[i].name[0]);
+			}
+			else
+			{
+				printf(": %*s : %*s :", si_size, "", line_size, "");
+			}
+			printf(" %*s : %*s:\n", line_size, address_book->list[i].phone_numbers[j], line_size, address_book->list[i].email_addresses[j]);
+			
+		}
+		printf("%.*s\n", 107, line);
+	}
 
 	return e_success;
 }
