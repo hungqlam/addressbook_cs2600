@@ -156,17 +156,17 @@ Status add_contacts(AddressBook *address_book)
 		
 			case e_second_opt:
 				printf("Enter the name:");
-				scanf("%c",&nam);
+				scanf("%s",&nam);
 				address_book->list->name= nam;
 				break;
 			case e_third_opt:
 				printf("Enter the phone number 1:");
-				scanf("%c",&phon);
+				scanf("%s",&phon);
 				address_book->list->phone_numbers = phon;
 				break;
 			case e_fourth_opt:
 				printf("Enter email:");
-				scanf("%c",&ema);
+				scanf("%s",&ema);
 				address_book->list->email_addresses = ema;
 				break;
 		
