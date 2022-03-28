@@ -10,6 +10,6 @@ To run the program:
 | Collaborators |
 | :------------ |
 | Tran Nguyen   | 
-| Grayson Wilson| 
+| Greyson Wilson| 
 | Phung Ly      | 
 | Hung Lam      |
