@@ -154,8 +154,8 @@ Status edit_contact(AddressBook *address_book)
 	MenuOptions opt;
 	do
 	{
-		ContactInfo *person;
-		
+		int person;
+
 		printf("#######   Search contact to edit by: ");
 		printf("\n\n");
 		printf("0. Back");
@@ -165,155 +165,140 @@ Status edit_contact(AddressBook *address_book)
 		printf("\n4. Serial No \n\n");
 		opt = get_option(NUM, "Please select an option: ");
 
-		switch(opt)
+		switch (opt)
 		{
-			case 0: 
-				return e_back;
-				break;
-			case 1:
-			
-				printf("Enter the name: ");
-				fflush(stdin);
-				scanf("%[^\n]s", str);
-				
-				search(str, address_book, address_book->count, opt, "", e_search);
+		case 0:
+			return e_exit;
+		case 1:
+		{
+			printf("Enter the name: ");
+			fflush(stdin);
+			scanf("%[^\n]s", str);
+			search(str, address_book, address_book->count, opt, "", e_search);
 			break;
-			case 2:
-			
-				printf("Enter a phone number: ");
-				fflush(stdin);
-				scanf("%[^\n]s", str);
-					search(str, address_book, address_book->count, opt, "", e_search);
-				break;
-			
-			case 3:
-			
-				printf("Enter an email address: ");
-				fflush(stdin);
-				scanf("%[^\n]s", str);
-				search(str, address_book, address_book->count, opt, "", e_search);
-			
-				break;
-			
-			case 4:
-			
-				printf("Enter a serial number: ");
-				fflush(stdin);
-				scanf("%[^\n]s", str);			
-				search(str, address_book, address_book->count, opt, "", e_search);
-				break;
-			
-			default:
-			
-				return e_no_match;
-				break;
-			
-
+		}
+		case 2:
+		{
+			printf("Enter a phone number: ");
+			fflush(stdin);
+			scanf("%[^\n]s", str);
+			search(str, address_book, address_book->count, opt, "", e_search);
+			break;
+		}
+		case 3:
+		{
+			printf("Enter an email address: ");
+			fflush(stdin);
+			scanf("%[^\n]s", str);
+			search(str, address_book, address_book->count, opt, "", e_search);
+			break;
+		}
+		case 4:
+		{
+			printf("Enter a serial number: ");
+			scanf("%[^\n]s", str);
+			search(str, address_book, address_book->count, opt, "", e_search);
+			break;
+		}
+		default:
+		{
+			return e_no_match;
+			break;
+		}
 		}
 
 		char option = get_option(CHAR, "Press: [s] = Select, Press: [q] | Cancel: ");
-		if(option == 's')
+		if (option == 's')
 		{
-			
-			
+
 			person = get_option(NUM, "Select a Serial Number (S.No) to Edit: ");
 			person = person - 1; // Shift back
-
 			do
 			{
-				//Print out the information
+				// Print out the information
+				// person = get_option(NUM,"Select a Serial Number (S.No) to Edit: " );
+
 				contact_confirmation(person, "Edit Contact:\n", address_book);
 				opt = get_option(NUM, "Please select an option: ");
-								
-				
+				fflush(stdin);
+				int index;
 				switch (opt)
 				{
 				case e_first_opt:
 					break;
-		
 				case e_second_opt:
-						printf("Enter Name index to be changed [Max %d]: ", NAME_COUNT);
-						index = get_option(NUM, "");
-						index = index - 1;
 
-						// check if the the index is negative or over the NAME_COUNT
-						if (index < -1 || index > NAME_COUNT)
-							break;
-
-						// Prompt the user to enter the name to change
-						printf("Enter Name %d: [Just enter removes the entry]: ", index);
-
-						fgets(str, NAME_LEN, stdin);
-
-						string_len = strlen(str) - 1;
-						if (str[string_len] == '\n')
-							str[string_len] = '\0'; // set the end of userInput to null
-
-						strcpy(address_book->list[person].name[index], str);
-						break;
-
-				case e_third_opt:
-					//Promt the user to enter the phone number index to change
-					printf("Enter Phone Number index to be changed [Max %d]: ", PHONE_NUMBER_COUNT);
+					// Promt the user to enter the name index to change
+					printf("Enter Name index to be changed [Max %d]: ", NAME_COUNT);
 					index = get_option(NUM, "");
 					index = index - 1;
 
-					//check if the the index is negative or over the PHONE_NUMBER_COUNT
-					if (index < 1 || index > PHONE_NUMBER_COUNT)
+					// check if the the index is negative or over the NAME_COUNT
+					if (index < -1 || index > NAME_COUNT)
 						break;
 
-					//Prompt the user to enter the phone number to change
+					// Prompt the user to enter the name to change
+					printf("Enter Name %d: [Just enter removes the entry]: ", index);
+					fflush(stdin);
+					fgets(str, NAME_LEN, stdin);
+
+					string_len = strlen(str) - 1;
+					if (str[string_len] == '\n')
+						str[string_len] = '\0'; // set the end of userInput to null
+
+					strcpy(address_book->list[person].name[index], str);
+					break;
+				case e_third_opt:
+					printf("Enter Phone Number index to be changed [Max %d]: ", PHONE_NUMBER_COUNT);
+					index = get_option(NUM, "");
+					index = index - 1;
+					fflush(stdin);
+					// check if the the index is negative or over the PHONE_NUMBER_COUNT
+					if (index < -1 || index > PHONE_NUMBER_COUNT)
+						break;
+
+					// Prompt the user to enter the phone number to change
 					printf("Enter Phone Number %d: [Just enter removes the entry]: ", index);
 					fgets(str, NUMBER_LEN, stdin);
 					string_len = strlen(str) - 1;
 
 					if (str[string_len] == '\n')
-						str[string_len] = '\0'; //set the end of userInput to null
+						str[string_len] = '\0'; // set the end of userInput to null
 					strcpy(address_book->list[person].phone_numbers[index], str);
 					break;
 
 				case e_fourth_opt:
-					//Promt the user to enter the email index to change
-					printf("Enter Email ID index to be changed [Max %d]: ", EMAIL_ID_COUNT);	
+					printf("Enter Email Address index to be changed [Max %d]: ", PHONE_NUMBER_COUNT);
 					index = get_option(NUM, "");
 					index = index - 1;
-
-				//check if the the index is negative or over the EMAIL_ID_COUNT
-					if (index < 1 || index > EMAIL_ID_COUNT)
+					fflush(stdin);
+					// check if the the index is negative or over the PHONE_NUMBER_COUNT
+					if (index < -1 || index > PHONE_NUMBER_COUNT)
 						break;
 
-				//Prompt the user to enter the email id to change
-					printf("Enter Email ID %d: [Just enter removes the entry]: ", index);
-					fgets(str, EMAIL_ID_LEN, stdin);
-					string_len = strlen(userInput) - 1;
+					// Prompt the user to enter the phone number to change
+					printf("Enter Email Address %d: [Just enter removes the entry]: ", index);
+					fgets(str, NUMBER_LEN, stdin);
+					string_len = strlen(str) - 1;
 
-				if (str[string_len] == '\n')
-					str[string_len] = '\0'; //set the end of userInput to null
-
-				strcpy(address_book->list[person].email_addresses[index], str);
-
+					if (str[string_len] == '\n')
+						str[string_len] = '\0'; // set the end of userInput to null
+					strcpy(address_book->list[person].email_addresses[index], str);
 					break;
-					
 				default:
 					break;
 				}
 
-
-			}while(opt != 0);
-
+			} while (opt != 0);
 		}
 
 		else
-		opt = 0;
+			opt = 0;
 
-		
-	}while (opt != 0);
-	      
+	} while (opt != 0);
+
 	return e_success;
-	
-
 }
-
 
 Status delete_contact(AddressBook *address_book)
 {
