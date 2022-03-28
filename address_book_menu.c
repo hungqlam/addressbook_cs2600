@@ -664,7 +664,7 @@ Status edit_contact(AddressBook *address_book)
 						break;
 
 					// Prompt the user to enter the phone number to change
-					printf("Enter Phone Number %d: [Just enter removes the entry]: ", index);
+					printf("Enter Phone Number %d: [Just enter removes the entry]: ", index + 1);
 					fgets(str, NUMBER_LEN, stdin);
 					string_len = strlen(str) - 1;
 
@@ -683,7 +683,7 @@ Status edit_contact(AddressBook *address_book)
 						break;
 
 					// Prompt the user to enter the phone number to change
-					printf("Enter Email Address %d: [Just enter removes the entry]: ", index);
+					printf("Enter Email Address %d: [Just enter removes the entry]: ", index + 1);
 					fgets(str, NUMBER_LEN, stdin);
 					string_len = strlen(str) - 1;
 
