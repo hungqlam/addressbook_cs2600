@@ -7,11 +7,13 @@
 #include <ctype.h>
 #include <stdbool.h>
 
+
 #include "address_book.h"
 
 Status load_file(AddressBook *address_book)
 {
 	int ret;
+
 	const int SIZE = 50;
 
 	/*
@@ -77,6 +79,7 @@ Status load_file(AddressBook *address_book)
 			fclose(ptr);
 			fclose(address_book->fp);
 		}
+
 	}
 	else
 	{
@@ -84,6 +87,7 @@ Status load_file(AddressBook *address_book)
 		address_book->fp = fopen(DEFAULT_FILE, "a");
 		address_book->count = 0;
 		address_book->list = (ContactInfo *)calloc(SIZE, sizeof(ContactInfo));
+
 		fclose(address_book->fp);
 	}
 
@@ -96,6 +100,7 @@ Status save_file(AddressBook *address_book)
 	 * Write contacts back to file.
 	 * Re write the complete file currently
 	 */
+  
 	address_book->fp = fopen(DEFAULT_FILE, "w");
 
 	if (address_book->fp == NULL)
@@ -103,27 +108,6 @@ Status save_file(AddressBook *address_book)
 		return e_fail;
 	}
 
-	/*
-	 * Add the logic to save the file
-	 * Make sure to do error handling
-	//  */
-	// // Print names
-	// fprintf(address_book->fp, "%s,", address_book->list->name);
-	// // Print phone numbers upto max allowable phone numbers
-	// int numbers = sizeof(address_book->list->phone_numbers) / NUMBER_LEN;
-	// for (int i = 0; i < numbers; i++)
-	// {
-	// 	fprintf(address_book->fp, "%s ", address_book->list->phone_numbers[i]);
-	// }
-	// // fprintf(address_book->fp, FIELD_DELIMITER);
-	// //  print emails upto max allowable emails
-	// int emails = sizeof(address_book->list->email_addresses) / EMAIL_ID_COUNT;
-	// for (int i = 0; i < emails; i++)
-	// {
-	// 	fprintf(address_book->fp, "%s ", address_book->list->email_addresses[i]);
-	// }
-	// // fprintf(address_book->fp, FIELD_DELIMITER);
-	// //  print id?
 	int count = 0;
 	int number_count = 0;
 	int email_count = 0;
@@ -145,6 +129,7 @@ Status save_file(AddressBook *address_book)
 		fprintf(address_book->fp, "%s\n", address_book->list[count].email_addresses[EMAIL_ID_COUNT - 1]);
 		count++;
 	}
+
 
 	fclose(address_book->fp);
 
