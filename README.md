@@ -7,8 +7,6 @@ To run the program:
 # Youtube Video
 
 
-
-# Collaborators
 | Collaborators |
 | :------------ |
 | Tran Nguyen   | 
