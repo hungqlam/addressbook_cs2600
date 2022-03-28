@@ -6,4 +6,4 @@ To run the program:
 ```mingw32-make program```
 
 # Collaborators
-<hr>
+
