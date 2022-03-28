@@ -426,4 +426,3 @@ Status delete_contact(AddressBook *address_book)
 	} while (condition == 1);
 	return e_success;
 }
-

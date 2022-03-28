@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+
+
+
 //#include <unistd.h>
 #include <sys/stat.h>
 #include <errno.h>
@@ -13,6 +17,7 @@
 Status load_file(AddressBook *address_book)
 {
 	int ret;
+
 
 	const int SIZE = 50;
 
@@ -80,10 +85,12 @@ Status load_file(AddressBook *address_book)
 			fclose(address_book->fp);
 		}
 
+
 	}
 	else
 	{
 		/* Create a file for adding entries */
+
 		address_book->fp = fopen(DEFAULT_FILE, "a");
 		address_book->count = 0;
 		address_book->list = (ContactInfo *)calloc(SIZE, sizeof(ContactInfo));
@@ -99,7 +106,11 @@ Status save_file(AddressBook *address_book)
 	/*
 	 * Write contacts back to file.
 	 * Re write the complete file currently
+
+
 	 */
+  
+
 
 	address_book->fp = fopen(DEFAULT_FILE, "w");
 
@@ -107,6 +118,7 @@ Status save_file(AddressBook *address_book)
 	{
 		return e_fail;
 	}
+
 
 	int count = 0;
 	int number_count = 0;
@@ -129,6 +141,7 @@ Status save_file(AddressBook *address_book)
 		fprintf(address_book->fp, "%s\n", address_book->list[count].email_addresses[EMAIL_ID_COUNT - 1]);
 		count++;
 	}
+
 
 
 	fclose(address_book->fp);

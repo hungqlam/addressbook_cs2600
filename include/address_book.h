@@ -3,28 +3,34 @@
 
 #include <stdio.h>
 
-#define DEFAULT_FILE "address_book.csv"
+
+#define DEFAULT_FILE				"address_book.csv"
 
 /* Length of a contact name  */
-#define NAME_LEN 32
+#define NAME_LEN					32
 /* Length of a phone number */
-#define NUMBER_LEN 32
+#define NUMBER_LEN					32
 /* Length of an email address */
-#define EMAIL_ID_LEN 32
+#define EMAIL_ID_LEN				32
 
 /* Maximum number of Names per contact, Just for easy design */
-#define NAME_COUNT 1
+#define NAME_COUNT					1
 /* Maximum number of phones per contact */
-#define PHONE_NUMBER_COUNT 5
+#define PHONE_NUMBER_COUNT			5
 /* Maximum number of email addresses per contact */
-#define EMAIL_ID_COUNT 5
+#define EMAIL_ID_COUNT				5
+
 
 #define FIELD_DELIMITER ","
 #define NEXT_ENTRY "\n"
+#define MAX_SEARCH_RESULTS 			10
+
+
 
 typedef int bool_t;
 
-typedef enum
+typedef enum 
+
 {
 	e_add,
 	e_search,
@@ -35,6 +41,8 @@ typedef enum
 
 
 typedef enum
+
+
 {
 	e_first_opt,
 	e_second_opt,
@@ -51,13 +59,22 @@ typedef enum
 {
 	e_fail = -10,
 	e_back,
+
+
+
 	e_success = 0, // Changed it to = 0 to be useful
+
+
 	e_no_match,
 	e_new_line,
 } Status;
 
 
+
+
 typedef enum
+
+
 {
 	e_exit,
 	e_add_contact,
@@ -71,19 +88,26 @@ typedef enum
 typedef struct
 {
 
+
+	
 	char name[NAME_COUNT][NAME_LEN];					// Size of name array: 1*32
 	char phone_numbers[PHONE_NUMBER_COUNT][NUMBER_LEN]; // size is 5*32
 	char email_addresses[EMAIL_ID_COUNT][EMAIL_ID_LEN]; // size is 5*32
+
 	int si_no;
-  
+
 } ContactInfo;
 
 typedef struct
 {
 	FILE *fp;
 	ContactInfo *list;
+
+
+	
 	int count;
-  
+
+
 } AddressBook;
 
 #endif
