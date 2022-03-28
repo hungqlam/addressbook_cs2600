@@ -40,6 +40,7 @@ void contact_confirmation(int target, char *msg, AddressBook *address_book)
 {
 	int count = 0;
 	char condition[32] = "";
+	int character;
 
 	menu_header(msg);
 	printf("0. Exit\n");
@@ -48,7 +49,8 @@ void contact_confirmation(int target, char *msg, AddressBook *address_book)
 
 	for (int phone = 1; phone < PHONE_NUMBER_COUNT; phone++)
 	{
-		if ((int)address_book->list[target].phone_numbers[phone][0] != 32) // Condition error
+		character = (int)address_book->list[target].phone_numbers[phone][0];
+		if (character != 32 && character != 0) // Condition error
 		{
 			printf("            %d : %s\n", phone + 1, address_book->list[target].phone_numbers[phone]);
 		}
@@ -58,8 +60,8 @@ void contact_confirmation(int target, char *msg, AddressBook *address_book)
 
 	for (int email = 1; email < EMAIL_ID_COUNT; email++)
 	{
-
-		if ((int)address_book->list[target].email_addresses[email][0] != 32)
+		character = (int)address_book->list[target].email_addresses[email][0];
+		if (character != 32 && character != 0)
 		{
 			printf("            %d : %s\n", email + 1, address_book->list[target].email_addresses[email]);
 		}
@@ -230,7 +232,7 @@ void menu_header(const char *str)
 {
 	fflush(stdout);
 
-	// system("cls"); // changed clear to cls
+	system("cls"); // changed clear to cls
 
 	printf("#######  Address Book  #######\n");
 	if (str != '\0') // if (!strcmp(str, "\0"))
@@ -316,14 +318,14 @@ Status add_contacts(AddressBook *address_book)
 	// do
 	// {
 	// 	/* code */
-	// 	printf("#######   Add Contact:");
-	// 	printf("\n\n");
+	// 	menu_header("Add Contact");
 	// 	printf("0. Back");
 	// 	printf("\n1. Name");
 	// 	printf("\n2. Phone No 1: ");
 	// 	printf("\n3. Email ID 1: ");
 	// 	printf("\n\nPlease select an option: ");
 
+	// 	opt = get_option(% d, "\nPlease select an option: ");
 	// 	scanf("%d", &opt);
 
 	// 	if (address_book == NULL)
