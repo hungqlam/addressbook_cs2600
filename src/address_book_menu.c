@@ -5,6 +5,7 @@
 #include <ctype.h>
 #include <stdbool.h>
 
+
 #include "address_book_fops.h"
 //#include "abk_log.h"
 #include "address_book_menu.h"
@@ -44,6 +45,7 @@ void contact_confirmation(int target, char *msg, AddressBook *address_book)
 	printf("\n");
 	fflush(stdout);
 }
+
 int get_option(int type, const char *msg)
 {
 	/*
@@ -76,6 +78,7 @@ int get_option(int type, const char *msg)
 	}
 
 	return -1;
+
 
 	/* Fill the code to add above functionality */
 }
@@ -199,12 +202,14 @@ Status list_contacts(AddressBook *address_book, const char *title, int *index, c
 		fflush(stdout);
 	}
 
+
 	return e_success;
 }
 
 void menu_header(const char *str)
 {
 	fflush(stdout);
+
 
 	system("cls"); // changed clear to cls
 
@@ -280,25 +285,22 @@ Status menu(AddressBook *address_book)
 	} while (option != e_exit);
 
 	fflush(stdout);
-
 	return e_success;
 }
 
 Status add_contacts(AddressBook *address_book)
 {
 	// /* Add the functionality for adding contacts here */
-
 }
 
 Status search(const char *str, AddressBook *address_book, int loop_count, int field, const char *msg, Modes mode)
 {
-	
+
 }
 
 Status search_contact(AddressBook *address_book)
 {
 	/* Add the functionality for search contacts here */
-	
 }
 
 Status edit_contact(AddressBook *address_book)
@@ -424,3 +426,4 @@ Status delete_contact(AddressBook *address_book)
 	} while (condition == 1);
 	return e_success;
 }
+

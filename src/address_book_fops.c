@@ -7,11 +7,13 @@
 #include <ctype.h>
 #include <stdbool.h>
 
+
 #include "address_book.h"
 
 Status load_file(AddressBook *address_book)
 {
 	int ret;
+
 	const int SIZE = 50;
 
 	/*
@@ -77,6 +79,7 @@ Status load_file(AddressBook *address_book)
 			fclose(ptr);
 			fclose(address_book->fp);
 		}
+
 	}
 	else
 	{
@@ -84,6 +87,7 @@ Status load_file(AddressBook *address_book)
 		address_book->fp = fopen(DEFAULT_FILE, "a");
 		address_book->count = 0;
 		address_book->list = (ContactInfo *)calloc(SIZE, sizeof(ContactInfo));
+
 		fclose(address_book->fp);
 	}
 
@@ -96,6 +100,7 @@ Status save_file(AddressBook *address_book)
 	 * Write contacts back to file.
 	 * Re write the complete file currently
 	 */
+
 	address_book->fp = fopen(DEFAULT_FILE, "w");
 
 	if (address_book->fp == NULL)
@@ -124,6 +129,7 @@ Status save_file(AddressBook *address_book)
 		fprintf(address_book->fp, "%s\n", address_book->list[count].email_addresses[EMAIL_ID_COUNT - 1]);
 		count++;
 	}
+
 
 	fclose(address_book->fp);
 
