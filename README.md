@@ -9,7 +9,7 @@ To run the program:
 
 
 # Collaborators
-
+| Collaborators |
 | :------------ |
 | Tran Nguyen   | 
 | Grayson Wilson| 
