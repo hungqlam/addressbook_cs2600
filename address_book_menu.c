@@ -137,83 +137,94 @@ Status add_contacts(AddressBook *address_book)
 	/* Add the functionality for adding contacts here */
 	
 	int opt;
+	int condition = 0;
 	do
 	{
 		/* code */
-		printf("#######   Add Contact:");
-		printf("\n\n");
-		printf("0. Back");
-		printf("\n1. Name");
-		printf("\n2. Phone No 1: ");
-		printf("\n3. Email ID 1: ");
-		printf("\n\nPlease select an option: ");
+		// menu_header("Add Contact:");
+		// printf("0. Back");
+		// printf("\n1. Name");
+		// printf("\n2. Phone No 1: ");
+		// printf("\n3. Email ID 1: ");
+		contact_confirmation(address_book->count, "Adding contact", address_book);
 
-		scanf("%d",&opt);
-		address_book = (AddressBook*) malloc(sizeof(AddressBook));
-		address_book->list = (ContactInfo*) malloc(sizeof(ContactInfo));
-
-		    if(address_book == NULL)
-		    {
-			printf("Cannot Allocate Memory\n");
-
-			return -1;
-		    }
-
-		    address_book->count +=1;
-		   
-		    address_book->list->si_no +=1;
-		    if(address_book->list == NULL)
-		    {
-			printf("Cannot Allocate Memory \n");
-			 /* on failure free successfuly allocated book */
-			 free(book);
-			 return  -1;
-		    }
-		
+		opt = get_option(NUM, "\n\nPlease select an option: ");
+		printf("Count is: %d\n", address_book->count);
 		switch (opt)
 		{
-		
 			case e_second_opt:
+			{
 				printf("Enter the name:");
-				if(scanf("%s", &adress_book->list->name[book->count])!=1)
-				    {
-					printf("Invalid, input\n");
-					free(address_book->list);
-					free(address_book);
-					return -1;
-				    }
+				char str[32];
+				fflush(stdin);
+				scanf("%[^\n]s", str);
+				fflush(stdin);
+				strcpy(address_book->list[address_book->count].name[0], str);
+				condition = 1;
 				break;
+			}
+				
 			case e_third_opt:
-				printf("Enter the phone number :");
-				if(scanf("%s", &address_book->list->phone_numbers[book->count])!=1)
-				    {
-					printf("Invalid, input\n");
-					free(address_book->list);
-					free(address_book);
-					return -1;
-				    }
+			{
+				int index = 0;
+				printf("Enter Phone Number index to be changed [Max %d]: ", PHONE_NUMBER_COUNT);
+				index = get_option(NUM, "");
+				index = index - 1;
+				int string_len;
+				char str[32];
+				fflush(stdin);
+				// check if the the index is negative or over the PHONE_NUMBER_COUNT
+				if (index < -1 || index > PHONE_NUMBER_COUNT)
+					break;
+
+				// Prompt the user to enter the phone number to change
+				printf("Enter Phone Number %d: ", index + 1);
+				scanf("%[^\n]s", str);
+				string_len = strlen(str) - 1;
+
+				if (str[string_len] == '\n')
+					str[string_len] = '\0'; // set the end of userInput to null
+				strcpy(address_book->list[address_book->count].phone_numbers[index], str);
+				condition = 1;
 				break;
+			}
+				
 			case e_fourth_opt:
-				printf("Enter email:");
-				if(scanf("%s", &address_book->list->email_addresses[book->count])!=1)
-				    {
-					printf("Invalid, input\n");
-					free(address_book->list);
-					free(address_book);
-					return -1;
-				    }
-    
+			{
+				int index = 0;
+				printf("Enter Email Number index to be changed [Max %d]: ", EMAIL_ID_COUNT);
+				index = get_option(NUM, "");
+				index = index - 1;
+				int string_len;
+				char str[32];
+				fflush(stdin);
+				// check if the the index is negative or over the EMAIL_ID_COUNT
+				if (index < -1 || index > EMAIL_ID_COUNT)
+					break;
+				// Prompt the user to enter the phone number to change
+				printf("Enter Email Number %d: ", index + 1);
+				scanf("%[^\n]s", str);
+				string_len = strlen(str) - 1;
+				if (str[string_len] == '\n')
+					str[string_len] = '\0'; // set the end of userInput to null
+				strcpy(address_book->list[address_book->count].email_addresses[index], str);
+				condition = 1;
 				break;
+			}
+				
 		
 			case e_first_opt:
 			// case 0
 				break;
+			default:
+				return e_fail;
 		}
 	} while (opt!=0);
-	
-	
-
-	
+	if (condition == 1) {
+		address_book->list[address_book->count].si_no = address_book->count + 1;
+		address_book->count++;
+	}
+	return e_success;
 }
 
 Status search(const char *str, AddressBook *address_book, int loop_count, int field, const char *msg, Modes mode)
