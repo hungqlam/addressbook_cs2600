@@ -149,7 +149,8 @@ Status add_contacts(AddressBook *address_book)
 		printf("\n\nPlease select an option: ");
 
 		scanf("%d",&opt);
-		
+		address_book = (AddressBook*) malloc(sizeof(AddressBook));
+		address_book->list = (ContactInfo*) malloc(sizeof(ContactInfo));
 
 		    if(address_book == NULL)
 		    {
