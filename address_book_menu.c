@@ -672,6 +672,22 @@ Status edit_contact(AddressBook *address_book)
 					break;
 
 				case e_fourth_opt:
+					printf("Enter Email Address index to be changed [Max %d]: ", PHONE_NUMBER_COUNT);
+					index = get_option(NUM, "");
+					index = index - 1;
+					fflush(stdin);
+					// check if the the index is negative or over the PHONE_NUMBER_COUNT
+					if (index < -1 || index > PHONE_NUMBER_COUNT)
+						break;
+
+					// Prompt the user to enter the phone number to change
+					printf("Enter Email Address %d: [Just enter removes the entry]: ", index);
+					fgets(str, NUMBER_LEN, stdin);
+					string_len = strlen(str) - 1;
+
+					if (str[string_len] == '\n')
+						str[string_len] = '\0'; // set the end of userInput to null
+					strcpy(address_book->list[person].email_addresses[index], str);
 					break;
 				default:
 					break;
