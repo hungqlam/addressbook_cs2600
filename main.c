@@ -9,9 +9,7 @@
 
 int main(void)
 {
-	AddressBook *address_book; 
-	address_book = (AddressBook*) malloc(sizeof(AddressBook));
-	address_book->list = (ContactInfo*) malloc(sizeof(ContactInfo));
+	AddressBook address_book;
 	Status ret;
 
 	/* Load the file from .csv file if any */
@@ -25,7 +23,8 @@ int main(void)
 		if (ret == e_success)
 		{
 			/* Save the entries */
-			(&address_book);
+			save_prompt(&address_book);
+
 		}
 	}
 
