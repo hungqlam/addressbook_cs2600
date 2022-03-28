@@ -103,27 +103,6 @@ Status save_file(AddressBook *address_book)
 		return e_fail;
 	}
 
-	/*
-	 * Add the logic to save the file
-	 * Make sure to do error handling
-	//  */
-	// // Print names
-	// fprintf(address_book->fp, "%s,", address_book->list->name);
-	// // Print phone numbers upto max allowable phone numbers
-	// int numbers = sizeof(address_book->list->phone_numbers) / NUMBER_LEN;
-	// for (int i = 0; i < numbers; i++)
-	// {
-	// 	fprintf(address_book->fp, "%s ", address_book->list->phone_numbers[i]);
-	// }
-	// // fprintf(address_book->fp, FIELD_DELIMITER);
-	// //  print emails upto max allowable emails
-	// int emails = sizeof(address_book->list->email_addresses) / EMAIL_ID_COUNT;
-	// for (int i = 0; i < emails; i++)
-	// {
-	// 	fprintf(address_book->fp, "%s ", address_book->list->email_addresses[i]);
-	// }
-	// // fprintf(address_book->fp, FIELD_DELIMITER);
-	// //  print id?
 	int count = 0;
 	int number_count = 0;
 	int email_count = 0;
