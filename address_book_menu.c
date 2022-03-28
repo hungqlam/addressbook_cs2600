@@ -40,7 +40,6 @@ int valid_int(const char *msg, int low, int high)
 
 void contact_confirmation(int target, char *msg, AddressBook *address_book)
 {
-	printf("Called confirmation\n");
 	int count = 0;
 	char condition[32] = "";
 
@@ -130,28 +129,23 @@ Status list_contacts(AddressBook *address_book, const char *title, int *index, c
 			printf("%.*s\n", 107, line);
 			fflush(stdout);
 
-			for (int i = count; i < WINDOW_SIZE + count; i++)
+			for (int info = count; info < WINDOW_SIZE + count; info++)
 			{
-				for (int j = 0; j < 5; j++)
+				for (int field = 0; field < PHONE_NUMBER_COUNT; field++)
 				{
-					if (j == 0)
+					if (field == 0)
 					{
-						printf(": %*d : %*s :", si_size, address_book->list[i].si_no, line_size, address_book->list[i].name[0]);
+						printf(": %*d : %*s :", si_size, address_book->list[info].si_no, line_size, address_book->list[info].name[0]);
 					}
 					else
 					{
 						printf(": %*s : %*s :", si_size, "", line_size, "");
 					}
-					printf(" %*s : %*s:\n", line_size, address_book->list[i].phone_numbers[j], line_size, address_book->list[i].email_addresses[j]);
+					printf(" %*s : %*s:\n", line_size, address_book->list[info].phone_numbers[field], line_size, address_book->list[info].email_addresses[field]);
 				}
 				printf("%.*s\n", 107, line);
 			}
 
-			// while (getchar() != '\n')
-			// 	;
-			// printf("%s", msg);
-			// fflush(stdout);
-			// print_option = getchar();
 			print_option = get_option(CHAR, msg);
 
 			switch (print_option)
@@ -179,23 +173,23 @@ Status list_contacts(AddressBook *address_book, const char *title, int *index, c
 		printf(": %*s : %*s : %*s : %*s:\n", si_size, "S. No", line_size, "Name", line_size, "Phone No", line_size, "Email Id");
 		printf("%.*s\n", 107, line);
 		fflush(stdout);
-		for (int i = 0; i < address_book->count; i++) // Loop through the entire AddressBook
+		for (int info = 0; info < address_book->count; info++) // Loop through the entire AddressBook
 		{
 
-			if (i == index[found] && index[found] >= 0 && index[found] <= address_book->count) // Temporal condition
+			if (info == index[found] && index[found] >= 0 && index[found] <= address_book->count) // Temporal condition
 			{
 
-				for (int j = 0; j < 5; j++)
+				for (int field = 0; field < 5; field++)
 				{
-					if (j == 0)
+					if (field == 0)
 					{
-						printf(": %*d : %*s :", si_size, address_book->list[i].si_no, line_size, address_book->list[i].name[0]);
+						printf(": %*d : %*s :", si_size, address_book->list[info].si_no, line_size, address_book->list[info].name[0]);
 					}
 					else
 					{
 						printf(": %*s : %*s :", si_size, "", line_size, "");
 					}
-					printf(" %*s : %*s:\n", line_size, address_book->list[i].phone_numbers[j], line_size, address_book->list[i].email_addresses[j]);
+					printf(" %*s : %*s:\n", line_size, address_book->list[info].phone_numbers[field], line_size, address_book->list[info].email_addresses[field]);
 				}
 				printf("%.*s\n", 107, line);
 				found++;
@@ -315,117 +309,113 @@ Status delete_contact(AddressBook *address_book)
 	char delete_char, confirmation;
 	int target;
 	int count = 0;
+	int condition = 1;
 
-	menu_header("Search Contact to Delete By:\n");
-
-	printf("0. Back\n");
-	printf("1. Name\n");
-	printf("2. Phone No\n");
-	printf("3. Email ID\n");
-	printf("4. Serial No\n");
-
-	int option = -1;
-	option = get_option(NUM, "Please select an option: ");
-	// printf("Please select an option: ");
-	// scanf("%d", &option);
-
-	switch (option)
+	do
 	{
-	case e_first_opt:
-		return e_back;
-		break;
-	case e_second_opt:
-		printf("Enter the name: ");
-		fflush(stdin);
-		scanf("%[^\n]s", str);
-		if (search(str, address_book, address_book->count, option, "", e_delete) != e_success)
+
+		menu_header("Search Contact to Delete By:\n");
+
+		printf("0. Back\n");
+		printf("1. Name\n");
+		printf("2. Phone No\n");
+		printf("3. Email ID\n");
+		printf("4. Serial No\n");
+
+		int option = -1;
+		option = get_option(NUM, "Please select an option: ");
+
+		switch (option)
 		{
-			printf("---FAIL---\n");
-
-			return e_no_match;
-		}
-		break;
-	case e_third_opt:
-		printf("Enter the Phone No: ");
-		fflush(stdin);
-		scanf("%[^\n]s", str);
-		if (search(str, address_book, address_book->count, option, "", e_delete) != e_success)
-		{
-			printf("---FAIL---\n");
-
-			return e_no_match;
-		}
-		break;
-	case e_fourth_opt:
-		printf("Enter the Email ID: ");
-		fflush(stdin);
-		scanf("%[^\n]s", str);
-		if (search(str, address_book, address_book->count, option, "", e_delete) != e_success)
-		{
-			printf("---FAIL---\n");
-
-			return e_no_match;
-		}
-		break;
-	case e_fifth_opt:
-		printf("Enter the Serial No: ");
-		fflush(stdin);
-		scanf("%[^\n]s", str);
-		if (search(str, address_book, address_book->count, option, "", e_delete) != e_success)
-		{
-			printf("---FAIL---\n");
-			return e_no_match;
-		}
-		break;
-	default:
-		return e_fail;
-	}
-
-	// printf("\nPress: [s] = Select, [q] | Cancel: ");
-	// delete_char = getchar();
-	delete_char = get_option(CHAR, "\nPress: [s] = Select, [q] | Cancel: ");
-
-	if (delete_char == 's')
-	{
-		printf("Select a serial Number (S.No) to Delete: ");
-		fflush(stdout);
-		scanf("%d", &target);
-		target = target - 1;
-		contact_confirmation(target, "Delete Contact:\n", address_book);
-
-		// printf("Enter 'Y' to delete. [Press any key to ignore]: ");
-		// while (getchar() != '\n')
-		// 	;
-		// fflush(stdout);
-		// confirmation = getchar();
-		confirmation = get_option(CHAR, "Enter 'Y' to delete. [Press any key to ignore]: ");
-
-		if (confirmation == 'Y')
-		{
-			count = target;
-
-			while (count < address_book->count)
+		case e_first_opt:
+			return e_back;
+			break;
+		case e_second_opt:
+			printf("Enter the name: ");
+			fflush(stdin);
+			scanf("%[^\n]s", str);
+			if (search(str, address_book, address_book->count, option, "", e_delete) != e_success)
 			{
-				if (count == (address_book->count - 1))
-				{ // last contact
-					strcpy(address_book->list[count].name[0], "");
-					address_book->list[count].si_no = 0;
-				}
-				strcpy(address_book->list[count].name[0], address_book->list[count + 1].name[0]);
-				for (int i = 0; i < PHONE_NUMBER_COUNT; i++)
+				return e_no_match;
+			}
+			break;
+		case e_third_opt:
+			printf("Enter the Phone No: ");
+			fflush(stdin);
+			scanf("%[^\n]s", str);
+			if (search(str, address_book, address_book->count, option, "", e_delete) != e_success)
+			{
+
+				return e_no_match;
+			}
+			break;
+		case e_fourth_opt:
+			printf("Enter the Email ID: ");
+			fflush(stdin);
+			scanf("%[^\n]s", str);
+			if (search(str, address_book, address_book->count, option, "", e_delete) != e_success)
+			{
+
+				return e_no_match;
+			}
+			break;
+		case e_fifth_opt:
+			printf("Enter the Serial No: ");
+			fflush(stdin);
+			scanf("%[^\n]s", str);
+			if (search(str, address_book, address_book->count, option, "", e_delete) != e_success)
+			{
+				return e_no_match;
+			}
+			break;
+		default:
+			return e_fail;
+		}
+
+		delete_char = get_option(CHAR, "Press: [s] = Select, [q] | Cancel: ");
+
+		if (delete_char == 's')
+		{
+			printf("Select a serial Number (S.No) to Delete: ");
+			fflush(stdout);
+			scanf("%d", &target);
+			target = target - 1;
+
+			if (target < 0 || target >= address_book->count)
+				return e_no_match;
+
+			contact_confirmation(target, "Delete Contact:\n", address_book);
+
+			confirmation = get_option(CHAR, "Enter 'Y' to delete. [Press any key to ignore]: ");
+
+			if (confirmation == 'Y')
+			{
+				count = target;
+
+				while (count < address_book->count)
 				{
 					if (count == (address_book->count - 1))
 					{ // last contact
-						strcpy(address_book->list[count].phone_numbers[0], "");
-						strcpy(address_book->list[count].email_addresses[0], "");
+						strcpy(address_book->list[count].name[0], "");
+						address_book->list[count].si_no = 0;
 					}
-					strcpy(address_book->list[count].phone_numbers[0], address_book->list[count + 1].phone_numbers[0]);
-					strcpy(address_book->list[count].email_addresses[0], address_book->list[count + 1].email_addresses[0]);
+					strcpy(address_book->list[count].name[0], address_book->list[count + 1].name[0]);
+					for (int i = 0; i < PHONE_NUMBER_COUNT; i++)
+					{
+						if (count == (address_book->count - 1))
+						{ // last contact
+							strcpy(address_book->list[count].phone_numbers[0], "");
+							strcpy(address_book->list[count].email_addresses[0], "");
+						}
+						strcpy(address_book->list[count].phone_numbers[0], address_book->list[count + 1].phone_numbers[0]);
+						strcpy(address_book->list[count].email_addresses[0], address_book->list[count + 1].email_addresses[0]);
+					}
+					count++;
 				}
-				count++;
+				address_book->count--;
+				condition = 0;
 			}
-			address_book->count--;
 		}
-	}
+	} while (condition == 1);
 	return e_success;
 }
